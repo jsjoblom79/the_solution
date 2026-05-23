@@ -1,0 +1,41 @@
+{
+  "app_name": "The Solution",
+  "version": "1.0.0",
+  "databases": [
+    {
+      "db": {
+        "connection_string": "sqlite:///test/main.db"
+      },
+      "name": "Main Database",
+      "url": "/main_page.html"
+    },
+    {
+      "db": {
+        "connection_string": "sqlite:///test/vend.db"
+      },
+      "name": "Vendor Database",
+      "url": "/html/vendor.html"
+    },
+    {
+      "db": {
+        "connection_string": "sqlite:///test/system.db"
+      },
+      "name": "System Database",
+      "url": "/html/system.html"
+    },
+    {
+      "db": {
+        "connection_string": "sqlite:///test/task.db"
+      },
+      "name": "Task Database",
+      "url": "/html/task.html"
+    },
+    {
+      "db": {
+        "connection_string": "sqlite:///test/staff.db"
+      },
+      "name": "Staff Database",
+      "url": "/html/staff.html"
+    }
+  ]
+}

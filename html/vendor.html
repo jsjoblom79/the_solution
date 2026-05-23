@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/default.css">
+    <title>Vendor System</title>
+</head>
+<body>
+<div class="main-container">
+
+    <div class="header-section pb-all">
+        <h1>JMS SYSTEMS LLC.</h1>
+        <h2>copyright (c) 2026 jms</h2>
+        <button onclick="window.pywebview.api.close_app()" style="float: right;">LOGOUT</button>
+    </div>
+    <div class="two-section-dashboard">
+        <div class="dashboard-section pb-all">
+            <h3 class="sb-bottom">Applications</h3>
+            <div class="dashboard-section-row" id="applications">
+
+            </div>
+        </div>
+        <div class="dashboard-section pb-all">
+            <h3 class="sb-bottom">Services</h3>
+        </div>
+    </div>
+    <div class="single-section">
+        <label for="vendorList">Select Vendor:</label>
+        <input list="vendors" id="vendorList">
+        <datalist id="vendors">
+        </datalist>
+    </div>
+    <div class="two-section-dashboard">
+
+    </div>
+    <div class="footer sb-top">
+        <span>Main Menu</span>
+        <span id="appVer"></span>
+        <span>System</span>
+    </div>
+</div>
+<script src="/js/main.js"></script>
+<script src="/js/vendor.js"></script>
+</body>
+</html>

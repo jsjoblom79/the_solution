@@ -1,0 +1,4 @@
+pywebview
+sqlalchemy
+sqlacodegen
+screeninfo

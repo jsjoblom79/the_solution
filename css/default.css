@@ -1,0 +1,143 @@
+:root {
+   --primary-border-color: #24d830;
+   --text-color: #24d830;
+   --secondary-text-color: #7890f0;
+   --secondary-border-color: #7890f0;
+}
+
+body {
+    background: black;
+    color: white;
+    font-family: consolas;
+}
+
+h1 {
+    text-align: center;
+    color: var(--text-color);
+}
+
+button {
+    background: transparent;
+    color: var(--text-color);
+    padding: 10px;
+    margin: 5px;
+    border: none;
+
+}
+
+button:hover{
+    background: var(--primary-border-color);
+    color: black;
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--secondary-text-color);
+    text-decoration: underline;
+}
+
+.main-container {
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    min-height: 90vh;
+    margin: auto;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.pb-all {
+    border: solid 1.5px;
+    border-color: var(--primary-border-color);
+}
+
+.pb-top {
+    border-top: solid 1px;
+    border-color: var(--primary-border-color);
+}
+
+.pb-left {
+    border-left: solid 1px;
+    border-color: var(--primary-border-color);
+}
+
+.pb-right {
+    border-right: solid 1px;
+    border-color: var(--primary-border-color);
+}
+
+.pb-bottom {
+    border-bottom: solid 1px;
+    border-color: var(--primary-border-color);
+}
+
+.sb-all {
+    border: solid 1px;
+    border-color: var(--secondary-border-color);
+}
+
+.sb-top {
+    border-top: solid 1px;
+    border-color: var(--secondary-border-color);
+}
+
+.sb-left {
+    border-left: solid 1px;
+    border-color: var(--secondary-border-color);
+}
+
+.sb-right {
+    border-right: solid 1px;
+    border-color: var(--secondary-border-color);
+}
+
+.sb-bottom {
+    border-bottom: solid 1px;
+    border-color: var(--secondary-border-color);
+}
+
+.header-section {
+    margin-bottom: 10px;
+}
+
+.header-section h2 {
+    font-size: 14px;
+    color: var(--secondary-text-color);
+    text-align: center;
+}
+
+.three-section-dashboard {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+.two-section-dashboard {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 10px;
+    margin-bottom: 0.5em;
+}
+
+.dashboard-section-row {
+    display: grid;
+    grid-template-rows: auto;
+    row-gap: 5px;
+    margin-left: 5px;
+    padding-bottom: 5px;
+}
+.dashboard-section h3 {
+    color: var(--text-color);
+    margin-right: 5px;
+    margin-left: 5px;
+    font-size: 14px;
+}
+.footer {
+    margin-top: 1em;
+    padding-top: 0.5em;
+    display: flex;
+    justify-content: space-between;
+}
