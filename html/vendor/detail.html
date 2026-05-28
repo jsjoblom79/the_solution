@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/greenscreen.css">
+
+    <title>Vendor Detail</title>
+</head>
+<body>
+<div class="gs-screen">
+   <div class="gs-titlebar">
+        <span>JNDEOS SYSTEMS</span>
+        <span class="gs-titlebar__system">copyright (c) 2026 jms</span>
+    </div>
+    <nav aria-label="primary">
+         <ul class="gs-menubar">
+          <li class="gs-menubar__item">
+            <button class="gs-menubar__trigger"><a href="/html/vendor.html"><-Back</a></button>
+            <ul class="gs-dropdown" id="gs-menubar-dropdown">
+                <li class="gs-dropdown__item"></li>
+            </ul>
+          </li>
+          <li class="gs-menubar__item"><button class="gs-btn gs-btn--danger" onclick="window.pywebview.api.close_app()">Exit</button></li>
+        </ul>
+    </nav>
+    <div class="gs-window gs-mb-1" id="vendor-details">
+        <div class="gs-window__titlebar">
+            <span>Vendor information</span>
+            <div class="gs-window__controls">
+                <button class="gs-window__btn gs-window__btn--collapse"
+                  aria-label="Collapse"
+                  onclick="
+                    const b = document.querySelector('#vendor-details .gs-window__body');
+                    const collapsed = b.classList.toggle('gs-window__body--collapsed');
+                    this.textContent = collapsed ? '▲' : '▽';
+                    this.setAttribute('aria-label', collapsed ? 'Expand' : 'Collapse');
+              ">▲</button>
+            </div>
+        </div>
+        <div class="gs-window__body gs-window__body--collapsed">
+            <div class="gs-field">
+                <label for="vendorname">Name</label>
+                <input class="gs-input" type="text" id="vendorname">
+            </div>
+            <div class="gs-fields-2">
+                <div class="gs-field">
+                    <label for="vendor-address1">Add 1</label>
+                    <input class="gs-input" type="text" id="vendor-address1">
+                </div>
+
+                <div class="gs-field">
+                    <label for="vendor-address2">Add 2</label>
+                    <input class="gs-input" type="text" id="vendor-address2">
+                </div>
+            </div>
+            <div class="gs-fields-3">
+                <div class="gs-field">
+                    <label for="vendor-city">City</label>
+                    <input class="gs-input" type="text" id="vendor-city">
+                </div>
+                <div class="gs-field">
+                    <label for="vendor-state">State</label>
+                    <input class="gs-input" type="text" id="vendor-state">
+                </div>
+                <div class="gs-field">
+                    <label for="vendor-zip">Postal Code</label>
+                    <input class="gs-input" type="text" id="vendor-zip">
+                </div>
+            </div>
+            <div class="gs-fields-2">
+                <div class="gs-field">
+                    <label for="vendor-country">Country</label>
+                    <input class="gs-input" type="text" id="vendor-country">
+                </div>
+                <div class="gs-field">
+                    <label for="vendor-website">Website</label>
+                    <input class="gs-input" type="text" id="vendor-website">
+                </div>
+            </div>
+            <div class="gs-fields-2">
+                <div class="gs-field">
+                    <label for="create-date">Create Date</label>
+                    <input class="gs-input" id="create-date" type="date">
+                </div>
+                <div class="gs-field">
+                    <label for="modify-date">Last Modified Date</label>
+                    <input class="gs-input" id="modify-date" type="date">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="gs-window gs-mb-1" id="contact-window">
+        <div class="gs-window__titlebar">
+            <span>Contact Information</span>
+            <button class="gs-window__btn gs-window__btn--collapse"
+                  aria-label="Collapse"
+                  onclick="
+                    const b = document.querySelector('#contact-window .gs-window__body');
+                    const collapsed = b.classList.toggle('gs-window__body--collapsed');
+                    this.textContent = collapsed ? '▲' : '▽';
+                    this.setAttribute('aria-label', collapsed ? 'Expand' : 'Collapse');
+              ">▲</button>
+        </div>
+        <div class="gs-window__body gs-window__body--collapsed">
+            <div class="gs-fields-2">
+                <div class="gs-window">
+                    <div class="gs-window__titlebar">
+                       <span>Contacts</span>
+                    </div>
+
+                    <div class="gs-window__body">
+                        <nav class="gs-sidebar">
+                            <ul class="gs-sidebar__nav" id="vendor-contacts">
+
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="gs-window">
+                    <div class="gs-window__titlebar">
+                        <span>Add Contact</span>
+                    </div>
+
+                    <div class="gs-window__body" id="vendor-contact-ma">
+                        <div class="gs-fields-2">
+                            <div class="gs-field">
+                                <label for="contact-fname">First Name</label>
+                                <input class="gs-input" id="contact-fname" type="text">
+                            </div>
+                            <div class="gs-field">
+                                <label for="contact-lname">Last Name</label>
+                                <input class="gs-input" id="contact-lname" type="text">
+                            </div>
+                        </div>
+                        <div class="gs-fields-2">
+                            <div class="gs-field">
+                                <label for="contact-phone">Phone</label>
+                                <input class="gs-input" id="contact-phone" type="text">
+                            </div>
+                            <div class="gs-field">
+                                <label for="contact-email">Email</label>
+                                <input class="gs-input" id="contact-email" type="text">
+                            </div>
+                        </div>
+                        <div class="gs-fields-2">
+                            <div class="gs-field">
+                                <label for="contact-title">Title</label>
+                                <input class="gs-input" id="contact-title" type="text">
+                            </div>
+                            <div class="gs-field">
+                                <label for="contact-active">Active</label>
+                                <input class="gs-check" id="contact-active" type="checkbox">
+
+                            </div>
+                        </div>
+                        <div class="gs-fields-2">
+                            <div class="gs-field">
+                                <label for="contact-cd">Created</label>
+                                <input class="gs-input" id="contact-cd" type="text" disabled>
+                            </div>
+                            <div class="gs-field">
+                                <label for="contact-md">Modified</label>
+                                <input class="gs-input" id="contact-md" type="text" disabled>
+                            </div>
+                        </div>
+                        <div class="gs-fields-2">
+                            <button class="gs-btn" type="submit" onclick="addContact()">Save</button>
+                            <button class="gs-btn" type="reset" onclick="clearContact()">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="gs-window gs-mb-1" id="comment-window">
+        <div class="gs-window__titlebar">
+            <span>Vendor Notes</span>
+            <button class="gs-window__btn gs-window__btn--collapse"
+                  aria-label="Collapse"
+                  onclick="
+                    const b = document.querySelector('#comment-window .gs-window__body');
+                    const collapsed = b.classList.toggle('gs-window__body--collapsed');
+                    this.textContent = collapsed ? '▲' : '▽';
+                    this.setAttribute('aria-label', collapsed ? 'Expand' : 'Collapse');
+              ">▲</button>
+        </div>
+        <div class="gs-window__body gs-window__body--collapsed">
+            <div class="gs-field">
+                <label for="selected-contact">Contact Reached</label>
+                <select class="gs-select" id="selected-contact"></select>
+            </div>
+            <div class="gs-field">
+                <label for="vendor-comment">Notes</label>
+                <input class="gs-input gs-mb-1" id="vendor-comment" type="text">
+                <button class="gs-btn gs-btn--primary" onclick="addNote()">ADD</button>
+            </div>
+            <table class="gs-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Timestamp</th>
+                        <th style="width: 75%;">Comment</th>
+                    </tr>
+                </thead>
+                <tbody id="comment-body"></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="gs-window gs-mb-1" id="main-product-window">
+        <div class="gs-window__titlebar">
+            <span>Product Information</span>
+            <button class="gs-window__btn gs-window__btn--collapse"
+                  aria-label="Collapse"
+                  onclick="
+                    const b = document.querySelector('#main-product-window .gs-window__body');
+                    const collapsed = b.classList.toggle('gs-window__body--collapsed');
+                    this.textContent = collapsed ? '▲' : '▽';
+                    this.setAttribute('aria-label', collapsed ? 'Expand' : 'Collapse');
+              ">▲</button>
+        </div>
+        <div class="gs-window__body gs-window__body--collapsed">
+<!-- Add Table of Product Information -->
+            <table class="gs-table gs-mb-1">
+                <thead>
+                    <tr>
+                        <th>Item #</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Current Cost</th>
+                        <th>Last Bill Date</th>
+                    </tr>
+                </thead>
+                <tbody id="product-table-body"></tbody>
+            </table>
+            <div id="product-message"></div>
+            <div class="gs-window gs-mb-1" id="product-window">
+                <div class="gs-window__titlebar">
+                    <span>Add Product</span>
+                    <button class="gs-window__btn gs-window__btn--collapse"
+                          aria-label="Collapse"
+                          onclick="
+                            const b = document.querySelector('#product-window .gs-window__body');
+                            const collapsed = b.classList.toggle('gs-window__body--collapsed');
+                            this.textContent = collapsed ? '▲' : '+';
+                            this.setAttribute('aria-label', collapsed ? 'Expand' : 'Collapse');
+                      ">▲</button>
+                </div>
+                <div class="gs-window__body gs-window__body--collapsed">
+                    <div class="gs-fields-2">
+                        <div class="gs-field">
+                            <label for="product-item-number">Item #</label>
+                            <input class="gs-input" id="product-item-number">
+                        </div>
+                        <div class="gs-field">
+                            <label for="product-name">Name</label>
+                            <input class="gs-input" id="product-name">
+                        </div>
+                    </div>
+                    <div class="gs-field">
+                        <label for="product-description">Description</label>
+                        <input class="gs-input" id="product-description">
+                    </div>
+                    <div class="gs-fields-3">
+                        <div class="gs-field">
+                            <label for="product-model">Model</label>
+                            <input class="gs-input" id="product-model">
+                        </div>
+                        <div class="gs-field">
+                            <label for="product-serial">Serial</label>
+                            <input class="gs-input" id="product-serial">
+                        </div>
+                        <div class="gs-field">
+                            <label for="product-service-level">Service Level</label>
+                            <input class="gs-input" id="product-service-level">
+                        </div>
+                    </div>
+                    <div class="gs-fields-3">
+                        <div class="gs-field">
+                            <label for="product-cd">Create Date</label>
+                            <input class="gs-input" id="product-cd">
+                        </div>
+                        <div class="gs-field">
+                            <label for="product-ud">Last Updated </label>
+                            <input class="gs-input" id="product-ud">
+                        </div>
+                        <div class="gs-field">
+                            <label for="product-isUsed">In Use</label>
+                            <input class="gs-check" type="checkbox" id="product-isUsed">
+                        </div>
+                    </div>
+                    <div class="gs-field">
+                        <button class="gs-btn gs-btn--primary" onclick="addProduct()">Add Product</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="gs-window gs-mb-1" id="invoice-window">
+        <div class="gs-window__titlebar">
+            <span>Invoices</span>
+            <button class="gs-window__btn gs-window__btn--collapse"
+                  aria-label="Collapse"
+                  onclick="
+                    const b = document.querySelector('#invoice-window .gs-window__body');
+                    const collapsed = b.classList.toggle('gs-window__body--collapsed');
+                    this.textContent = collapsed ? '▲' : '▽';
+                    this.setAttribute('aria-label', collapsed ? 'Expand' : 'Collapse');
+              ">▲</button>
+        </div>
+        <div class="gs-window__body gs-window__body--collapsed">
+
+        </div>
+    </div>
+    <footer class="gs-statusbar">
+        <span class="gs-statusbar__segment" id="vendor-footer"></span>
+        <span class="gs-statusbar__segment" id="appVer"></span>
+        <span class="gs-statusbar__segment">Vendor System</span>
+    </footer>
+</div>
+<script src="/js/vendor/vendorDetail.js"></script>
+</body>
+</html>

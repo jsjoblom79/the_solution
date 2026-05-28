@@ -20,10 +20,13 @@ async function getAppVersion() {
 async function getSystemNames() {
     try {
         const names = await window.pywebview.api.config.getUrls();
-        let section = document.getElementById("applications");
+        let section = document.getElementById("gs-menubar-dropdown");
         names.forEach(item => {
             display_system(section, item.name, item.url);
         });
+        const exitBtn = document.createElement('li');
+        exitBtn.innerHTML = `<button class="gs-btn gs-btn--danger" onclick="window.pywebview.api.close_app()">Exit</button>`;
+        section.appendChild(exitBtn);
     } catch (error) {
         console.error("Failed to fetch system names.", error);
     }
@@ -32,13 +35,17 @@ async function getSystemNames() {
 
 // Display the different Systems
 function display_system(section, name, url) {
-    let span = document.createElement('span');
-    let a  = document.createElement('a');
-    a.textContent = name;
-    a.href = url;
-    // a.addEventListener('click', function(){
-    //     window.pywebview.api.navigate_to(url);
-    // });
-    span.appendChild(a);
-    section.appendChild(span);
+    let li = document.createElement('li');
+    li.innerHTML = `<button class="gs-menubar__trigger" onclick="goToUrl('${url}')">${name}</button>`;
+    // let a  = document.createElement('a');
+    // a.textContent = name;
+    // a.href = url;
+    // li.classList.add(['gs-btn','gs-menubar__item']);
+    // li.appendChild(a);
+    // section.appendChild(li);
+    section.appendChild(li);
+}
+
+function goToUrl(url){
+    location.assign(url);
 }

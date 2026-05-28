@@ -3,33 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/default.css">
+    <link rel="stylesheet" href="css/greenscreen.css">
     <title>The Solution</title>
 </head>
 <body>
-<div class="main-container">
+<div class="gs-screen">
 
-    <div class="header-section pb-all">
-        <h1>JMS SYSTEMS LLC.</h1>
-        <h2>copyright (c) 2026 jms</h2>
-        <button onclick="window.pywebview.api.close_app()" style="float: right;">LOGOUT</button>
+    <div class="gs-titlebar">
+        <span>JMS SYSTEMS LLC.</span>
+        <span class="gs-titlebar__system">copyright (c) 2026 jms</span>
     </div>
-    <div class="two-section-dashboard">
-        <div class="dashboard-section pb-all">
-            <h3 class="sb-bottom">Applications</h3>
-            <div class="dashboard-section-row" id="applications">
+    <nav aria-label="Primary">
+        <ul class="gs-menubar gs-mb-2" id="gs-menubar-dropdown">
+<!--          <li class="gs-menubar__item"><button class="gs-btn gs-btn&#45;&#45;danger" onclick="window.pywebview.api.close_app()">Exit</button></li>-->
+        </ul>
+    </nav>
+    <div class="gs-window gs-mb-1">
+        <div class="gs-window__titlebar">
+            <span>Vendor System</span>
+        </div>
+        <div class="gs-window__body">
 
-            </div>
-        </div>
-        <div class="dashboard-section pb-all">
-            <h3 class="sb-bottom">Services</h3>
         </div>
     </div>
-    <div class="footer sb-top">
-        <span>Main Menu</span>
-        <span id="appVer"></span>
-        <span>System</span>
+    <div class="gs-window gs-mb-1">
+        <div class="gs-window__titlebar">
+            <span>Systems</span>
+        </div>
+        <div class="gs-window__body">
+
+        </div>
     </div>
+    <div class="gs-window gs-mb-1">
+        <div class="gs-window__titlebar">
+            <span>Task System</span>
+        </div>
+        <div class="gs-window__body">
+
+        </div>
+    </div>
+    <div class="gs-window gs-mb-1">
+        <div class="gs-window__titlebar">
+            <span>Staff System</span>
+        </div>
+        <div class="gs-window__body">
+
+        </div>
+    </div>
+    <footer class="gs-statusbar">
+        <span class="gs-statusbar__segment">Main Menu</span>
+        <span class="gs-statusbar__segment" id="appVer"></span>
+        <span class="gs-statusbar__segment">System</span>
+    </footer>
 </div>
 <script src="js/main.js"></script>
 </body>

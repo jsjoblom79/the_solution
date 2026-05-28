@@ -1,0 +1,857 @@
+/* ============================================================
+   GREENSCREEN.CSS  —  Phosphor Terminal UI Stylesheet
+   A faithful homage to the amber/green CRT terminal aesthetic
+   ============================================================ */
+
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* Core phosphor palette */
+  --gs-bg:            #050e05;       /* Deep black-green screen */
+  --gs-bg-raised:     #071007;       /* Slightly lifted surface */
+  --gs-bg-overlay:    #0a180a;       /* Panels, modals */
+  --gs-border:        #1a3d1a;       /* Subtle structural border */
+  --gs-border-active: #2e7d32;       /* Focused / highlighted border */
+
+  /* Phosphor green shades */
+  --gs-glow:          #33ff33;       /* Primary bright phosphor — use sparingly */
+  --gs-primary:       #22cc22;       /* Main text / active elements */
+  --gs-secondary:     #159115;       /* Secondary / muted text */
+  --gs-dim:           #0d5e0d;       /* Very dim — disabled, hints */
+  --gs-cursor:        #33ff33;       /* Blinking cursor */
+
+  /* Semantic colours (reusing the green ramp) */
+  --gs-success:       #22cc22;
+  --gs-warning:       #cccc00;
+  --gs-danger:        #cc2222;
+  --gs-info:          #22cccc;       /* Cyan accent for info / links */
+
+  /* Typography */
+  --gs-font-mono:     'Share Tech Mono', 'Courier New', monospace;
+  --gs-font-display:  'VT323', monospace;   /* For headers / titles */
+
+  /* Sizing */
+  --gs-radius:        2px;           /* Terminals are square */
+  --gs-border-width:  1px;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--gs-bg);
+  color: var(--gs-primary);
+  font-family: var(--gs-font-mono);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+  /* Subtle phosphor text-shadow applied globally */
+  text-shadow: 0 0 6px rgba(51, 255, 51, 0.4);
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--gs-font-display);
+  color: var(--gs-glow);
+  text-shadow: 0 0 10px rgba(51, 255, 51, 0.7);
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+h1 { font-size: 3rem; }
+h2 { font-size: 2.2rem; }
+h3 { font-size: 1.8rem; }
+h4 { font-size: 1.4rem; }
+
+p {
+  color: var(--gs-primary);
+  margin-bottom: 0.8rem;
+}
+
+a {
+  color: var(--gs-info);
+  text-decoration: none;
+  text-shadow: 0 0 6px rgba(34, 204, 204, 0.5);
+  transition: color 0.1s, text-shadow 0.1s;
+}
+a:hover {
+  color: #44ffff;
+  text-shadow: 0 0 10px rgba(34, 204, 204, 0.9);
+  text-decoration: underline;
+}
+
+small, .gs-muted {
+  color: var(--gs-secondary);
+  font-size: 0.85em;
+  text-shadow: none;
+}
+
+.gs-dim {
+  color: var(--gs-dim);
+  text-shadow: none;
+}
+
+/* ── Blinking cursor ── */
+.gs-cursor::after {
+  content: '█';
+  color: var(--gs-cursor);
+  animation: gs-blink 1s step-end infinite;
+  text-shadow: 0 0 8px rgba(51, 255, 51, 0.9);
+}
+
+@keyframes gs-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── Prompt prefix ── */
+.gs-prompt::before {
+  content: '> ';
+  color: var(--gs-glow);
+  text-shadow: 0 0 8px rgba(51, 255, 51, 0.8);
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+
+/* Full-screen app wrapper */
+.gs-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Content area that fills remaining space */
+.gs-main {
+  flex: 1;
+  padding: 1.5rem 0;
+}
+
+/* Horizontal rule / divider */
+.gs-divider {
+  border: none;
+  border-top: var(--gs-border-width) solid var(--gs-border);
+  margin: 1.2rem 0;
+}
+
+/* ============================================================
+   TITLE BAR
+   ============================================================ */
+.gs-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: var(--gs-border-width) solid var(--gs-border-active);
+  font-family: var(--gs-font-display);
+  font-size: 1.4rem;
+  color: var(--gs-glow);
+  text-shadow: 0 0 10px rgba(51, 255, 51, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.gs-titlebar__system {
+  color: var(--gs-secondary);
+  font-size: 1rem;
+  text-shadow: none;
+}
+
+/* ============================================================
+   MENU BAR (horizontal top nav)
+   ============================================================ */
+.gs-menubar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: var(--gs-border-width) solid var(--gs-border);
+  list-style: none;
+}
+
+.gs-menubar__item {
+  position: relative;
+}
+
+.gs-menubar__trigger {
+  display: block;
+  padding: 0.45rem 1rem;
+  color: var(--gs-primary);
+  font-family: var(--gs-font-mono);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-right: var(--gs-border-width) solid var(--gs-border);
+  text-shadow: 0 0 5px rgba(51, 255, 51, 0.35);
+  transition: background 0.1s, color 0.1s;
+}
+
+.gs-menubar__trigger:hover,
+.gs-menubar__trigger:focus,
+.gs-menubar__trigger[aria-expanded="true"] {
+  background: var(--gs-bg-raised);
+  color: var(--gs-glow);
+  outline: none;
+  text-shadow: 0 0 8px rgba(51, 255, 51, 0.7);
+}
+
+/* ── Dropdown menu ── */
+.gs-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  background: var(--gs-bg-overlay);
+  border: var(--gs-border-width) solid var(--gs-border-active);
+  list-style: none;
+  z-index: 100;
+}
+
+.gs-menubar__item:hover .gs-dropdown,
+.gs-menubar__trigger[aria-expanded="true"] + .gs-dropdown {
+  display: block;
+}
+
+.gs-dropdown__item a,
+.gs-dropdown__item button {
+  display: block;
+  width: 100%;
+  padding: 0.45rem 1rem;
+  color: var(--gs-primary);
+  font-family: var(--gs-font-mono);
+  font-size: 0.88rem;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-shadow: none;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  transition: background 0.08s, color 0.08s;
+}
+
+.gs-dropdown__item a:hover,
+.gs-dropdown__item button:hover {
+  background: var(--gs-border);
+  color: var(--gs-glow);
+  text-shadow: 0 0 6px rgba(51, 255, 51, 0.5);
+}
+
+.gs-dropdown__separator {
+  border: none;
+  border-top: var(--gs-border-width) solid var(--gs-border);
+  margin: 0.2rem 0;
+}
+
+/* ============================================================
+   STATUS BAR (bottom)
+   ============================================================ */
+.gs-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  border-top: var(--gs-border-width) solid var(--gs-border);
+  font-size: 0.8rem;
+  color: var(--gs-secondary);
+  text-shadow: none;
+}
+
+.gs-statusbar__segment {
+  padding: 0 0.8rem;
+  border-right: var(--gs-border-width) solid var(--gs-border);
+}
+.gs-statusbar__segment:last-child { border-right: none; }
+
+.gs-statusbar__ok    { color: var(--gs-success); }
+.gs-statusbar__warn  { color: var(--gs-warning); }
+.gs-statusbar__error { color: var(--gs-danger);  }
+
+/* ============================================================
+   PANELS & WINDOWS
+   ============================================================ */
+.gs-panel {
+  background: var(--gs-bg-raised);
+  border: var(--gs-border-width) solid var(--gs-border);
+  border-radius: var(--gs-radius);
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.gs-panel--bordered {
+  border-color: var(--gs-border-active);
+}
+
+.gs-panel__header {
+  font-family: var(--gs-font-display);
+  font-size: 1.3rem;
+  color: var(--gs-glow);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 8px rgba(51, 255, 51, 0.6);
+  padding-bottom: 0.5rem;
+  border-bottom: var(--gs-border-width) solid var(--gs-border);
+  margin-bottom: 0.8rem;
+}
+
+/* ── Window chrome (title-bar on a panel) ── */
+.gs-window {
+  background: var(--gs-bg-raised);
+  border: var(--gs-border-width) solid var(--gs-border-active);
+  border-radius: var(--gs-radius);
+}
+
+.gs-window__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0.8rem;
+  background: var(--gs-border);
+  font-family: var(--gs-font-display);
+  font-size: 1rem;
+  color: var(--gs-glow);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.gs-window__controls {
+  display: flex;
+  gap: 0.4rem;
+}
+.gs-window__btn {
+  width: 14px;
+  height: 14px;
+  border: var(--gs-border-width) solid currentColor;
+  background: none;
+  cursor: pointer;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gs-secondary);
+  padding: 0;
+  font-family: var(--gs-font-mono);
+  transition: color 0.1s;
+}
+.gs-window__btn:hover { color: var(--gs-glow); }
+
+.gs-window__body {
+  padding: 1rem 1.2rem;
+}
+
+/* ── Collapsible window ── */
+.gs-window__body--collapsed {
+  display: none;
+}
+
+.gs-window__btn--collapse {
+  font-size: 0.75rem;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.gs-btn {
+  display: inline-block;
+  padding: 0.4rem 1.2rem;
+  font-family: var(--gs-font-mono);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  background: transparent;
+  color: var(--gs-primary);
+  border: var(--gs-border-width) solid var(--gs-primary);
+  border-radius: var(--gs-radius);
+  text-shadow: 0 0 5px rgba(51, 255, 51, 0.35);
+  transition: background 0.1s, color 0.1s, text-shadow 0.1s, box-shadow 0.1s;
+}
+
+.gs-btn:hover,
+.gs-btn:focus {
+  background: rgba(34, 204, 34, 0.12);
+  color: var(--gs-glow);
+  border-color: var(--gs-glow);
+  text-shadow: 0 0 8px rgba(51, 255, 51, 0.7);
+  box-shadow: 0 0 8px rgba(51, 255, 51, 0.2);
+  outline: none;
+}
+
+.gs-btn:active {
+  background: rgba(34, 204, 34, 0.25);
+}
+
+/* Variants */
+.gs-btn--primary {
+  color: var(--gs-bg);
+  background: var(--gs-primary);
+  border-color: var(--gs-primary);
+  text-shadow: none;
+}
+.gs-btn--primary:hover {
+  background: var(--gs-glow);
+  border-color: var(--gs-glow);
+  color: var(--gs-bg);
+}
+
+.gs-btn--danger {
+  color: var(--gs-danger);
+  border-color: var(--gs-danger);
+  text-shadow: none;
+}
+.gs-btn--danger:hover {
+  background: rgba(204, 34, 34, 0.15);
+  text-shadow: 0 0 6px rgba(204, 34, 34, 0.5);
+}
+
+.gs-btn--sm { padding: 0.25rem 0.75rem; font-size: 0.8rem; }
+.gs-btn--lg { padding: 0.55rem 1.8rem; font-size: 1rem; }
+
+.gs-btn:disabled {
+  color: var(--gs-dim);
+  border-color: var(--gs-dim);
+  cursor: not-allowed;
+  text-shadow: none;
+  background: transparent;
+}
+
+/* ============================================================
+   FORMS
+   ============================================================ */
+.gs-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--gs-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.3rem;
+  text-shadow: none;
+}
+
+.gs-input,
+.gs-textarea,
+.gs-select {
+  display: block;
+  width: 100%;
+  background: var(--gs-bg);
+  color: var(--gs-primary);
+  border: var(--gs-border-width) solid var(--gs-border-active);
+  border-radius: var(--gs-radius);
+  font-family: var(--gs-font-mono);
+  font-size: 0.95rem;
+  padding: 0.45rem 0.7rem;
+  outline: none;
+  text-shadow: 0 0 4px rgba(51, 255, 51, 0.3);
+  caret-color: var(--gs-cursor);
+  transition: border-color 0.1s, box-shadow 0.1s;
+}
+
+.gs-input:focus,
+.gs-textarea:focus,
+.gs-select:focus {
+  border-color: var(--gs-glow);
+  box-shadow: 0 0 6px rgba(51, 255, 51, 0.25);
+}
+
+.gs-input::placeholder,
+.gs-textarea::placeholder {
+  color: var(--gs-dim);
+  text-shadow: none;
+}
+
+.gs-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='%2322cc22'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  padding-right: 2rem;
+}
+
+.gs-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* ── Inline field grids ── */
+.gs-fields-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem 1.2rem;
+}
+
+.gs-fields-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.6rem 1.2rem;
+}
+
+.gs-field {
+  margin-bottom: 1rem;
+}
+
+/* Checkbox & Radio */
+.gs-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--gs-primary);
+  text-shadow: none;
+}
+
+.gs-check input[type="checkbox"],
+.gs-check input[type="radio"] {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: var(--gs-border-width) solid var(--gs-border-active);
+  background: var(--gs-bg);
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  border-radius: var(--gs-radius);
+}
+
+.gs-check input[type="radio"] { border-radius: 50%; }
+
+.gs-check input:checked {
+  background: var(--gs-primary);
+  border-color: var(--gs-glow);
+  box-shadow: 0 0 5px rgba(51, 255, 51, 0.4);
+}
+
+.gs-check input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  font-size: 12px;
+  color: var(--gs-bg);
+  line-height: 1;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.gs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.gs-table th {
+  font-family: var(--gs-font-display);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gs-glow);
+  text-align: left;
+  padding: 0.4rem 0.8rem;
+  border-bottom: var(--gs-border-width) solid var(--gs-border-active);
+  text-shadow: 0 0 6px rgba(51, 255, 51, 0.5);
+}
+
+.gs-table td {
+  padding: 0.4rem 0.8rem;
+  border-bottom: var(--gs-border-width) solid var(--gs-border);
+  color: var(--gs-primary);
+  text-shadow: 0 0 3px rgba(51, 255, 51, 0.2);
+  vertical-align: top;
+}
+
+.gs-table tr:hover td {
+  background: var(--gs-bg-raised);
+  text-shadow: 0 0 5px rgba(51, 255, 51, 0.35);
+}
+
+.gs-table--selected td {
+  background: rgba(34, 204, 34, 0.1);
+  color: var(--gs-glow);
+}
+
+/* ── Row highlight classes ── */
+.gs-row--warn td  { color: var(--gs-warning); }
+.gs-row--error td { color: var(--gs-danger);  }
+.gs-row--info td  { color: var(--gs-info);    }
+
+/* ============================================================
+   ALERTS & NOTICES
+   ============================================================ */
+.gs-alert {
+  padding: 0.6rem 1rem;
+  border-left: 3px solid currentColor;
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+  text-shadow: none;
+}
+
+.gs-alert--success { color: var(--gs-success); background: rgba(34, 204, 34, 0.07); }
+.gs-alert--warning { color: var(--gs-warning); background: rgba(204, 204, 0, 0.07); }
+.gs-alert--danger  { color: var(--gs-danger);  background: rgba(204, 34, 34, 0.07); }
+.gs-alert--info    { color: var(--gs-info);    background: rgba(34, 204, 204, 0.07); }
+
+.gs-alert__label {
+  font-family: var(--gs-font-display);
+  font-size: 1rem;
+  text-transform: uppercase;
+  margin-right: 0.5rem;
+}
+
+/* ============================================================
+   BADGES / TAGS
+   ============================================================ */
+.gs-badge {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: var(--gs-border-width) solid currentColor;
+  border-radius: var(--gs-radius);
+  text-shadow: none;
+}
+
+.gs-badge--ok      { color: var(--gs-success); }
+.gs-badge--warn    { color: var(--gs-warning); }
+.gs-badge--error   { color: var(--gs-danger);  }
+.gs-badge--info    { color: var(--gs-info);    }
+.gs-badge--muted   { color: var(--gs-secondary); }
+
+/* ============================================================
+   PROGRESS / LOADING
+   ============================================================ */
+.gs-progress {
+  width: 100%;
+  height: 12px;
+  background: var(--gs-bg-raised);
+  border: var(--gs-border-width) solid var(--gs-border-active);
+  border-radius: var(--gs-radius);
+  overflow: hidden;
+}
+
+.gs-progress__bar {
+  height: 100%;
+  background: var(--gs-primary);
+  box-shadow: 0 0 6px rgba(51, 255, 51, 0.5);
+  transition: width 0.3s ease;
+}
+
+/* ── ASCII spinner ── */
+.gs-spinner {
+  display: inline-block;
+  color: var(--gs-primary);
+  text-shadow: 0 0 6px rgba(51, 255, 51, 0.5);
+  animation: gs-spin 0.5s steps(4, end) infinite;
+}
+
+@keyframes gs-spin {
+  0%   { content: '|'; }
+  25%  { content: '/'; }
+  50%  { content: '—'; }
+  75%  { content: '\\'; }
+}
+
+/* ── Marching block animation (e.g. loading bar) ── */
+.gs-loading-bar {
+  font-family: var(--gs-font-mono);
+  color: var(--gs-primary);
+  overflow: hidden;
+  white-space: nowrap;
+  text-shadow: 0 0 5px rgba(51, 255, 51, 0.4);
+}
+
+/* ============================================================
+   CODE / TERMINAL OUTPUT
+   ============================================================ */
+pre, code, kbd {
+  font-family: var(--gs-font-mono);
+  font-size: 0.9rem;
+}
+
+.gs-terminal {
+  background: var(--gs-bg);
+  border: var(--gs-border-width) solid var(--gs-border-active);
+  border-radius: var(--gs-radius);
+  padding: 1rem;
+  overflow-x: auto;
+  color: var(--gs-primary);
+  text-shadow: 0 0 5px rgba(51, 255, 51, 0.3);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.gs-terminal .gs-t-cmd   { color: var(--gs-glow); }
+.gs-terminal .gs-t-out   { color: var(--gs-secondary); }
+.gs-terminal .gs-t-err   { color: var(--gs-danger); }
+.gs-terminal .gs-t-info  { color: var(--gs-info); }
+
+/* ============================================================
+   SIDEBAR NAVIGATION (vertical)
+   ============================================================ */
+.gs-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: var(--gs-border-width) solid var(--gs-border);
+  padding-right: 1rem;
+}
+
+.gs-sidebar__nav {
+  list-style: none;
+}
+
+.gs-sidebar__nav li + li {
+  margin-top: 0.1rem;
+}
+
+.gs-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.6rem;
+  color: var(--gs-secondary);
+  font-size: 0.88rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-shadow: none;
+  border-left: 2px solid transparent;
+  transition: color 0.1s, border-color 0.1s, background 0.1s;
+}
+
+.gs-sidebar__link:hover {
+  color: var(--gs-primary);
+  background: var(--gs-bg-raised);
+  text-shadow: 0 0 5px rgba(51, 255, 51, 0.3);
+}
+
+.gs-sidebar__link--active {
+  color: var(--gs-glow);
+  border-left-color: var(--gs-glow);
+  text-shadow: 0 0 6px rgba(51, 255, 51, 0.5);
+}
+
+.gs-sidebar__heading {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gs-dim);
+  padding: 0.8rem 0.6rem 0.3rem;
+  text-shadow: none;
+}
+
+/* ============================================================
+   MODAL / DIALOG
+   ============================================================ */
+.gs-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 14, 5, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.gs-modal {
+  background: var(--gs-bg-overlay);
+  border: var(--gs-border-width) solid var(--gs-border-active);
+  border-radius: var(--gs-radius);
+  min-width: 340px;
+  max-width: 600px;
+  width: 90%;
+}
+
+.gs-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+  border-bottom: var(--gs-border-width) solid var(--gs-border);
+  font-family: var(--gs-font-display);
+  font-size: 1.2rem;
+  color: var(--gs-glow);
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(51, 255, 51, 0.5);
+}
+
+.gs-modal__body   { padding: 1rem; }
+.gs-modal__footer {
+  padding: 0.7rem 1rem;
+  border-top: var(--gs-border-width) solid var(--gs-border);
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+.gs-text-success { color: var(--gs-success); }
+.gs-text-warning { color: var(--gs-warning); }
+.gs-text-danger  { color: var(--gs-danger);  }
+.gs-text-info    { color: var(--gs-info);    }
+.gs-text-glow    { color: var(--gs-glow); text-shadow: 0 0 10px rgba(51, 255, 51, 0.7); }
+.gs-text-muted   { color: var(--gs-secondary); text-shadow: none; }
+
+.gs-mono    { font-family: var(--gs-font-mono); }
+.gs-display { font-family: var(--gs-font-display); }
+
+.gs-upper   { text-transform: uppercase; letter-spacing: 0.06em; }
+.gs-blink   { animation: gs-blink 1s step-end infinite; }
+
+/* Flex helpers */
+.gs-flex         { display: flex; }
+.gs-flex-center  { display: flex; align-items: center; }
+.gs-flex-between { display: flex; align-items: center; justify-content: space-between; }
+.gs-gap-sm       { gap: 0.4rem; }
+.gs-gap          { gap: 0.8rem; }
+.gs-gap-lg       { gap: 1.5rem; }
+
+/* Spacing */
+.gs-mt-1 { margin-top: 0.5rem; }
+.gs-mt-2 { margin-top: 1rem;   }
+.gs-mt-3 { margin-top: 1.5rem; }
+.gs-mb-1 { margin-bottom: 0.5rem; }
+.gs-mb-2 { margin-bottom: 1rem;   }
+.gs-mb-3 { margin-bottom: 1.5rem; }
+
+/* ============================================================
+   SCROLLBAR (Webkit)
+   ============================================================ */
+::-webkit-scrollbar            { width: 6px; height: 6px; }
+::-webkit-scrollbar-track      { background: var(--gs-bg); }
+::-webkit-scrollbar-thumb      { background: var(--gs-border-active); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover{ background: var(--gs-primary); }
+
+/* Firefox */
+* { scrollbar-width: thin; scrollbar-color: var(--gs-border-active) var(--gs-bg); }
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+::selection {
+  background: rgba(34, 204, 34, 0.3);
+  color: var(--gs-glow);
+}

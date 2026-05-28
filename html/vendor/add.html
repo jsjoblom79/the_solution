@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/greenscreen.css">
+
+    <title>Vendor Detail</title>
+</head>
+<body>
+    <div class="gs-screen">
+       <div class="gs-titlebar">
+            <span>JNDEOS SYSTEMS</span>
+            <span class="gs-titlebar__system">copyright (c) 2026 jms</span>
+       </div>
+        <nav aria-label="primary">
+             <ul class="gs-menubar gs-mb-2">
+              <li class="gs-menubar__item">
+                <button class="gs-menubar__trigger"><a href="/html/vendor.html"><-Back</a></button>
+                <ul class="gs-dropdown" id="gs-menubar-dropdown">
+                    <li class="gs-dropdown__item"></li>
+                </ul>
+              </li>
+              <li class="gs-menubar__item"><button class="gs-btn gs-btn--danger" onclick="window.pywebview.api.close_app()">Exit</button></li>
+            </ul>
+        </nav>
+        <div class="gs-window">
+            <div class="gs-window__titlebar">
+                <span>Add New Vendor</span>
+            </div>
+            <div class="gs-window__body">
+
+                    <div class="gs-field">
+                        <label for="vendor-name">Name</label>
+                        <input class="gs-input" type="text" id="vendor-name">
+                    </div>
+
+                <div class="gs-fields-2">
+                    <div class="gs-field">
+                        <label for="vendor-address1">Add 1</label>
+                        <input class="gs-input" type="text" id="vendor-address1">
+                    </div>
+
+                    <div class="gs-field">
+                        <label for="vendor-address2">Add 2</label>
+                        <input class="gs-input" type="text" id="vendor-address2">
+                    </div>
+                </div>
+
+
+                <div class="gs-fields-3">
+                    <div class="gs-field">
+                        <label for="vendor-city">City</label>
+                        <input class="gs-input" type="text" id="vendor-city">
+                    </div>
+                    <div class="gs-field">
+                        <label for="vendor-state">State</label>
+                        <input class="gs-input" type="text" id="vendor-state">
+                    </div>
+                    <div class="gs-field">
+                        <label for="vendor-zip">Postal Code</label>
+                        <input class="gs-input" type="text" id="vendor-zip">
+                    </div>
+                </div>
+                <div class="gs-fields-2">
+                    <div class="gs-field">
+                        <label for="vendor-country">Country</label>
+                        <input class="gs-input" type="text" id="vendor-country">
+                    </div>
+                    <div class="gs-field">
+                        <label for="vendor-website">Website</label>
+                        <input class="gs-input" type="text" id="vendor-website">
+                    </div>
+                </div>
+                <div class="gs-field">
+                    <button class="gs-btn gs-btn--primary" type="submit" onclick="addVendor()">ADD</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/js/vendor/addVendor.js"></script>
+<script>
+    document.addEventListener('keydown', function(event) {
+        const keyCode = event.keyCode;
+
+        if (keyCode >= 112 && keyCode <= 121) {
+            event.preventDefault();
+        }
+
+        switch(keyCode) {
+            case 117: // F6
+                action: 'Add Vendor';
+                addVendor();
+                break;
+            case 112: // F1
+                action: 'Show Help';
+                break;
+        }
+    })
+</script>
+</body>
+</html>

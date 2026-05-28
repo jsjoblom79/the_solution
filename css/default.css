@@ -8,7 +8,7 @@
 body {
     background: black;
     color: white;
-    font-family: consolas;
+    font-family: Consolas, "Lucida Console", "Courier New";
 }
 
 h1 {
@@ -30,14 +30,32 @@ button:hover{
     color: black;
 }
 
+
 a {
     color: var(--text-color);
     text-decoration: none;
+    margin-bottom: 0.5em;
 }
 
 a:hover {
     color: var(--secondary-text-color);
     text-decoration: underline;
+}
+
+.link-btn {
+    background: transparent;
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    color: #24d830;
+    text-decoration: none;
+    line-height: 0.5em;
+}
+
+.link-btn:hover {
+    background: #24d830;
+    color: black;
+    text-decoration: none;
 }
 
 .main-container {
@@ -102,6 +120,7 @@ a:hover {
 
 .header-section {
     margin-bottom: 10px;
+    padding: 0.5em;
 }
 
 .header-section h2 {
@@ -110,6 +129,9 @@ a:hover {
     text-align: center;
 }
 
+.header-section span {
+    margin-bottom: 10px;
+}
 .three-section-dashboard {
     display: grid;
     grid-template-columns: auto auto auto;
@@ -127,7 +149,8 @@ a:hover {
     grid-template-rows: auto;
     row-gap: 5px;
     margin-left: 5px;
-    padding-bottom: 5px;
+    padding: 10px;
+    /*padding-bottom: 5px;*/
 }
 .dashboard-section h3 {
     color: var(--text-color);

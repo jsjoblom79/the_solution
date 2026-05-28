@@ -76,7 +76,7 @@ class Contacts(Base):
             'email': self.email,
             'title': self.title,
             'is_active': self.is_active,
-            'modify_date': str(self.modify_date.date())
+            'modify_date': str(self.modify_date)
         }
 
 class Invoices(Base):

@@ -6,35 +6,35 @@
       "db": {
         "connection_string": "sqlite:///test/main.db"
       },
-      "name": "Main Database",
+      "name": "Main",
       "url": "/main_page.html"
     },
     {
       "db": {
         "connection_string": "sqlite:///test/vend.db"
       },
-      "name": "Vendor Database",
+      "name": "Vendors",
       "url": "/html/vendor.html"
     },
     {
       "db": {
         "connection_string": "sqlite:///test/system.db"
       },
-      "name": "System Database",
+      "name": "Systems",
       "url": "/html/system.html"
     },
     {
       "db": {
         "connection_string": "sqlite:///test/task.db"
       },
-      "name": "Task Database",
+      "name": "Tasks",
       "url": "/html/task.html"
     },
     {
       "db": {
         "connection_string": "sqlite:///test/staff.db"
       },
-      "name": "Staff Database",
+      "name": "Staff",
       "url": "/html/staff.html"
     }
   ]
