@@ -9,6 +9,8 @@ window.addEventListener('pywebviewready', () => {
     displayVendor(vendorId);
     displayContacts(vendorId);
     getComments();
+    console.log("load products");
+    displayProducts(vendorId);
 
 });
 
@@ -51,11 +53,12 @@ async function displayContacts(vendorId) {
             li.textContent = `${contact.first_name} ${contact.last_name}`;
             li.onclick = getContact(`${contact.first_name} ${contact.last_name}`, vendorId);
             li.classList.add('gs-sidebar__link')
-            li.addEventListener('click', () => {
+            li.addEventListener('click', (event) => {
                 const links = document.querySelectorAll('.gs-sidebar__link');
                 links.forEach(l => l.classList.remove('gs-sidebar__link--active'));
                 li.classList.toggle('gs-sidebar__link--active');
-                getContact(`${contact.first_name} ${contact.last_name}`, vendorId);
+                const fullName = `${contact.first_name} ${contact.last_name}`
+                getContact(fullName, vendorId);
             });
             vendorContacts.appendChild(li);
         });
@@ -67,7 +70,10 @@ async function displayContacts(vendorId) {
 
 async function getContact(name, vendor_id) {
     const contact = await window.pywebview.api.vendor.get_contact(name, vendor_id);
-    displayContact(contact);
+    if (contact){
+       displayContact(contact);
+    }
+
 }
 
 function displayContact(contact) {
@@ -202,6 +208,7 @@ async function displayProducts(vendorId){
     const hasProducts = Array.isArray(products) && products.length > 0;
 
     if (hasProducts){
+        console.log("has products.")
         product_table.innerHTML = ``;
         products.forEach(product => {
            const tr = document.createElement('tr');
@@ -209,7 +216,7 @@ async function displayProducts(vendorId){
                     <td>${product.item_number}</td>
                     <td>${product.name}</td>
                     <td>${product.description}</td>
-                    <td>${product.price}</td>
+<!--                    <td>${product.price}</td>-->
                     <td>${product.updated_date}</td>
                     `;
         });
@@ -234,7 +241,8 @@ async function addProduct() {
         const message = document.getElementById('product-message');
         const div = document.createElement('div');
         div.classList.add('gs-alert','gs-alert--success');
-        div.innerHTML = `<span class="gs-alert__lable">Success</span> ${newProduct.name} has been created.`;
+        div.innerHTML = `<span class="gs-alert__lable">Success</span> ${newProduct.name} has been created.
+            <span><button>close</button></span>`;
         message.appendChild(div);
         clearProductForm();
     }

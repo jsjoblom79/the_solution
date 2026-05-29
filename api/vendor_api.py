@@ -62,7 +62,6 @@ class VendorDatabaseAPI:
 
     def get_all_vendors(self):
         vendors = self.repo.get_all(Vendors)
-        print(vendors)
         return [
             vendor.to_dict() for vendor in vendors
         ]
@@ -88,6 +87,8 @@ class VendorDatabaseAPI:
 
     def get_all_products(self, vendorId):
         products =  self.repo.get_all_children(Products, vendorId)
+        for product in products:
+            print(product.to_dict())
         return [
             product.to_dict() for product in products
         ]
