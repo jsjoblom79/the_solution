@@ -2,7 +2,6 @@
 
 import displayButton from "/js/button.js";
 import displayField from "/js/inputField.js";
-import displaySelectInput from "/js/selectInput.js";
 import displayWindow from "/js/displayWindow.js";
 import displayTwoField from "/js/displayTwoField.js";
 import displayThreeFields from "/js/displayThreeFields.js";
@@ -12,8 +11,8 @@ import displayFooter from "/js/displayFooter.js";
 import displayAppTitleBar from "/js/appTitleBar.js";
 
 let mainContent = document.getElementById('main-content');
-
-
+let alert = document.createElement('div');
+alert.id = 'alert-message';
 window.addEventListener('pywebviewready', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const vendorId = urlParams.get('id');
@@ -23,6 +22,7 @@ window.addEventListener('pywebviewready', async () => {
             'Copyright (c) 2026 JMS'
         ),
         await displayMainMenu(),
+        alert,
         await displayVendor(vendorId),
         await displayFooter('Vendor', 'System')
     )
@@ -57,9 +57,13 @@ async function displayVendorWindow(vendor){
         const cdField = await displayField('Created','vendor-cd','date','gs-input',returnDate(vendor.create_date));
     const udField = await displayField('Last Updated', 'vendor-ud', 'date', 'gs-input', returnDate(vendor.modify_date));
     const updateButton = displayButton('Update',['gs-btn','gs-btn--primary'], async() => {
+        vendor.create_date = new Date(vendor.create_date).toISOString();
         const result = await window.pywebview.api.vendor.update_vendor(vendor);
+        console.log(result);
         if(result){
-            displayAlert('Vendor updated','success','alert-message');
+            const message = await displayAlert('Vendor updated ','success', alert.id);
+            alert.append(message);
+            udField.input.value = returnDate(result.modify_date);
         }
 
     });

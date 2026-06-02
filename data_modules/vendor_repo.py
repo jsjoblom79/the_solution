@@ -29,7 +29,6 @@ class VendorRepo:
     def update(self, model):
         self.session.merge(model)
         self.session.commit()
-        self.session.refresh(model)
         return model
 
     def get_all(self, model):

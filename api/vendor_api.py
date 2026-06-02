@@ -73,7 +73,7 @@ class VendorDatabaseAPI:
         try:
 
             updated_vendor = Vendors(**vendor)
-            updated_vendor.created_at = None
+            updated_vendor.create_date = datetime.fromisoformat(updated_vendor.create_date.replace("Z", "+00:00"))
             updated_vendor.modify_date = datetime.now()
             vendor = self.repo.update(updated_vendor)
             print(updated_vendor.modify_date)

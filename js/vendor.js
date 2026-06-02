@@ -10,6 +10,9 @@ import displayFooter from "/js/displayFooter.js";
 import displayAppTitleBar from "/js/appTitleBar.js";
 
 const vendorBody = document.getElementById('main-content');
+const alert = document.createElement('div');
+alert.id = 'alert-message';
+
 let vendorList;
 let vendorWindow;
 window.addEventListener('pywebviewready', async () => {
@@ -18,6 +21,7 @@ window.addEventListener('pywebviewready', async () => {
     vendorBody.append(
         displayAppTitleBar("JMS Systems", "Copyright (c) 2026 JMS"),
         await displayMainMenu(),
+        alert,
         vendorWindow,
         await displayAddVendor(),
         await displayFooter('Vendors','System'));
