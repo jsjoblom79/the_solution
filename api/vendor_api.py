@@ -1,7 +1,9 @@
+from datetime import datetime
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 import logging
-from data_modules.vendor_models import Base, Vendors, Contacts, Invoices, Products, Comments
+from data_modules.vendor_models import Base, Vendors, Contacts, Invoices, Products, Comments, ProductPrices
 from data_modules.vendor_repo import VendorRepo
 
 
@@ -9,8 +11,8 @@ class VendorDatabaseAPI:
     def __init__(self, config):
         try:
             self.engine = create_engine(config.getConnectionString("Vendors"))
-            self.session = sessionmaker(bind=self.engine)
-            self.db = self.session()
+            self.session = sessionmaker(bind=self.engine, expire_on_commit=False)
+            self.db = scoped_session(self.session)
             Base.metadata.create_all(self.engine)
 
         except Exception as e:
@@ -22,8 +24,8 @@ class VendorDatabaseAPI:
     def add_vendor(self, vendor):
         try:
             new_vendor = Vendors(**vendor)
-            saved_vendor = self.repo.add(new_vendor)
-            return saved_vendor.to_dict()
+            self.repo.add(new_vendor)
+            return new_vendor.to_dict()
 
         except Exception as e:
             logging.error(f"Unable to add vendor. {e}")
@@ -51,9 +53,33 @@ class VendorDatabaseAPI:
         try:
             new_product = Products(**product)
             saved_product = self.repo.add(new_product)
-            return saved_product.to_dict()
+            print(new_product.id)
+            return new_product.to_dict()
         except Exception as e:
             logging.error(f"Unable to add product. {e}")
+            raise
+
+    def add_product_price(self, product_price):
+        try:
+            new_price = ProductPrices(**product_price)
+
+            saved_price = self.repo.add(new_price)
+            return saved_price.to_dict()
+        except Exception as e:
+            logging.error(f"Unable to add product price. {e}")
+            raise
+
+    def update_vendor(self, vendor):
+        try:
+
+            updated_vendor = Vendors(**vendor)
+            updated_vendor.created_at = None
+            updated_vendor.modify_date = datetime.now()
+            vendor = self.repo.update(updated_vendor)
+            print(updated_vendor.modify_date)
+            return updated_vendor.to_dict()
+        except Exception as e:
+            logging.error(f"Unable to update vendor. {e}")
             raise
 
     def get_vendor(self, vendor_id):
@@ -87,11 +113,18 @@ class VendorDatabaseAPI:
 
     def get_all_products(self, vendorId):
         products =  self.repo.get_all_children(Products, vendorId)
-        for product in products:
-            print(product.to_dict())
         return [
             product.to_dict() for product in products
         ]
+
+    def get_product_price(self, productId):
+        prices = self.repo.get_all_product_children(ProductPrices, productId)
+        for price in prices:
+            print(price.to_dict())
+            print(price.price)
+            if price.is_active:
+
+                return price.to_dict()
 
     def get_contact_by_id(self, contact_id):
         contact = self.repo.get_by_model_id(Contacts, contact_id)

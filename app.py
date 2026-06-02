@@ -43,7 +43,7 @@ if "__main__" == __name__:
         title="The Solution",
         url="main_page.html",
         on_top=True,
-        frameless=True,
+        frameless=False,
         easy_drag=True,
         js_api=api,
         width=avgWidth / 2,

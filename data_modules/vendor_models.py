@@ -14,7 +14,7 @@ class Vendors(Base):
     __tablename__ = 'vendors'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    create_date: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.now)
+    create_date: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.now().date)
     name: Mapped[Optional[str]] = mapped_column(Text)
     address1: Mapped[Optional[str]] = mapped_column(Text)
     address2: Mapped[Optional[str]] = mapped_column(Text)
@@ -33,7 +33,7 @@ class Vendors(Base):
     def to_dict(self):
         return {
             'id': self.id,
-            'create_date': str(self.create_date.date()),
+            'create_date': str(self.create_date),
             'name': self.name,
             'address1': self.address1,
             'address2': self.address2,
@@ -132,7 +132,7 @@ class Products(Base):
             'serial': self.serial,
             'service_level': self.service_level,
             'create_date': str(self.create_date.date()),
-            'update_date': str(self.update_date.date()),
+            'update_date': str(self.update_date),
             'is_used': self.is_used,
         }
 
@@ -188,5 +188,5 @@ class ProductPrices(Base):
             'price': self.price,
             'is_active': self.is_active,
             'create_date': str(self.create_date.date()),
-            'update_date': str(self.update_date.date()),
+            'update_date': str(self.update_date),
         }

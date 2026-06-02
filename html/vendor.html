@@ -7,44 +7,13 @@
     <title>Vendor System</title>
 </head>
 <body>
-<div class="gs-screen">
+<div class="gs-screen" id="main-content">
 
-    <div class="gs-titlebar">
-        <span>JNDEOS SYSTEMS</span>
-        <span class="gs-titlebar__system">copyright (c) 2026 jms</span>
-    </div>
-    <nav aria-label="Primary">
-        <ul class="gs-menubar gs-mb-2" id="gs-menubar-dropdown">
-<!--          <li class="gs-menubar__item"><button class="gs-btn gs-btn&#45;&#45;danger" onclick="window.pywebview.api.close_app()">Exit</button></li>-->
-        </ul>
-    </nav>
+    <div id="alert-message"></div>
+    <div id="vendor-body"></div>
 
-    <div class="gs-window gs-mb-2">
-        <div class="gs-window__titlebar">
-            <span>Select Vendor</span>
-            </div>
-            <div class="gs-window__body">
-                <div class="gs-field">
-                    <select class="gs-select" id="vendorList"></select>
-                </div>
-                 <div class="gs-field">
-                     <span class="gs-btn" id="vendor-search">Search</span>
-                     <span class="gs-btn" id="vendor-add"></span>
-                </div>
-            </div>
-
-
-    </div>
-
-
-
-    <footer class="gs-statusbar">
-        <span class="gs-statusbar__segment">Vendors</span>
-        <span class="gs-statusbar__segment" id="appVer"></span>
-        <span class="gs-statusbar__segment">System</span>
-    </footer>
 </div>
-<script src="/js/main.js"></script>
-<script src="/js/vendor.js"></script>
+
+<script type="module" src="/js/vendor.js"></script>
 </body>
 </html>
