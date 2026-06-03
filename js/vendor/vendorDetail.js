@@ -92,7 +92,6 @@ function returnDate(dateString){
 async function displayVendorContacts(id){
     const dispWin = displayWindow("Contacts", true);
     const vendorContacts = await window.pywebview.api.vendor.get_all_contacts(id);
-    const contactDiv = document.createElement('div');
 
     const contactFName = await displayField('First Name','contact-first-name', 'text', 'gs-input');
     const contactLName =  await displayField('Last Name', 'contact-last-name', 'text', 'gs-input');
@@ -101,15 +100,20 @@ async function displayVendorContacts(id){
     const contactTitle =  await displayField('Title', 'contact-title', 'text', 'gs-input');
     const contactActive =  await displayField('Active', 'contact-active', 'checkbox', 'gs-input');
     const contactLastUpdated =  await displayField('Last Update', 'contact-md', 'date', 'gs-input');
+    const contactLine1 = await displayTwoField([contactFName, contactLName]);
+    const contactLine2 = await displayThreeFields([contactPhone, contactEmail, contactActive]);
+    const contactLine3 = await displayTwoField([contactTitle, contactLastUpdated]);
     let contact;
-    if(Array.isArray(vendorContacts)){
+    const listToSave = [contactFName, contactLName, contactPhone, contactEmail, contactTitle, contactActive];
+    if(Array.isArray(vendorContacts) && vendorContacts.length > 0){
         let contactList =[];
         for(const contact of vendorContacts){
             contactList.push({name: contact.first_name + ' ' + contact.last_name, id: contact.id});
             console.log(contact);
         }
-        const selectContact = displaySelectInput('Contacts', contactList, 'gs-select', 'contact-select', async () => {
-                contact = await window.pywebview.api.vendor.get_contact();
+        const selectContact = displaySelectInput('Contacts', contactList, 'gs-select', 'contact-select', async (event) => {
+                contact = await window.pywebview.api.vendor.get_contact_ById(event.target.value);
+                console.log(event.target.options[event.target.selectedIndex].text);
                 contactFName.input.value = contact.first_name;
                 contactLName.input.value = contact.last_name;
                 contactPhone.input.value = contact.phone;
@@ -119,10 +123,24 @@ async function displayVendorContacts(id){
                 contactLastUpdated.input.value = returnDate(contact.modify_date);
         });
 
+        const updateButton = displayButton('Update', ['gs-btn', 'gs-btn--primary'], () =>{
+            listToSave.forEach(field =>{
+                const key = field.input.id.replace('contact-','');
+                contact[key] = field.input.value;
+            });
+            contact = await window.pywebview.api.vendor
+        });
         dispWin.winBody.append(selectContact);
-        dispWin.winBody.append(contactFName, contactLName, contactTitle, contactPhone, contactEmail, contactActive, contactLastUpdated);
+        dispWin.winBody.append(contactLine1, contactLine2, contactLine3, updateButton);
     } else {
-
+        const addButton = displayButton('Add', ['gs-btn', 'gs-btn--primary'], () =>{
+            const newContact = {};
+            listToSave.forEach(field =>{
+               const key = field.input.id.replace('contact-','');
+               newContact[key] = field.input.value;
+            });
+        });
+        dispWin.winBody.append(contactLine1, contactLine2, contactLine3, addButton);
     }
 
     return dispWin;
