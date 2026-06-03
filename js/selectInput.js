@@ -1,6 +1,6 @@
 "use strict";
 
-export default function displaySelectInput(name, options, classList, id, event){
+export default function displaySelectInput(name, options, classList, id, event = null){
     const div = document.createElement('div');
     div.classList.add('gs-field');
 
@@ -24,9 +24,12 @@ export default function displaySelectInput(name, options, classList, id, event){
         }
     } else {
         const noOption = document.createElement('option');
-        noOption.textContent = 'Add A Vendor To Continue';
+        noOption.textContent = 'Add an option to continue';
         noOption.value = '-1';
         select.append(noOption);
+    }
+    if(event){
+       select.addEventListener('change', event);
     }
 
     div.append(select);

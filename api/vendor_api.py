@@ -108,6 +108,9 @@ class VendorDatabaseAPI:
             if name == f"{contact.first_name} {contact.last_name}":
                 return contact.to_dict()
 
+    def get_contact_ById(self, contact_id):
+        contact = self.repo.get_by_model_id(Contacts, contact_id)
+        return contact.to_dict()
     def get_all_invoices(self):
         return self.repo.get_all(Invoices)
 

@@ -4,7 +4,8 @@ export default function displayWindow(title, hasDropDown=false){
     //Creates a div window
     const divWin = document.createElement('div');
     divWin.classList.add('gs-window', 'gs-mb-1');
-    divWin.id = title.replace(' ', '-') + "-id";
+    const titleId = title.replaceAll(' ','-').replaceAll(/[^\w\s-]/g,'');
+    divWin.id = titleId;//.replace(' ', '-') + "-id";
     //Creates the title bar
     const titlebar = document.createElement('div');
     titlebar.classList.add('gs-window__titlebar');
