@@ -35,7 +35,7 @@ class VendorDatabaseAPI:
         try:
             new_contact = Contacts(**contact)
             saved_contact = self.repo.add(new_contact)
-            return saved_contact.to_dict()
+            return new_contact.to_dict()
         except Exception as e:
             logging.error(f"Unable to add contact. {e}")
             raise
@@ -80,6 +80,17 @@ class VendorDatabaseAPI:
             return updated_vendor.to_dict()
         except Exception as e:
             logging.error(f"Unable to update vendor. {e}")
+            raise
+
+    def update_contact(self, contact):
+        try:
+            updated_contact = Contacts(**contact)
+            updated_contact.create_date = datetime.fromisoformat(updated_contact.create_date.replace("Z", "+00:00"))
+            updated_contact.modify_date = datetime.now()
+            contact = self.repo.update(updated_contact)
+            return updated_contact.to_dict()
+        except Exception as e:
+            logging.error(f"Unable to update contact. {e}")
             raise
 
     def get_vendor(self, vendor_id):

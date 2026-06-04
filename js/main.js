@@ -20,6 +20,6 @@ window.addEventListener('pywebviewready', async () =>{
 });
 
 function displayBodyContent() {
-    const vendorWindow = displayWindow('Vendor Dashboard',true);
+    const vendorWindow = displayWindow('Vendor Dashboard',true, false);
     mainContent.append(vendorWindow);
 }

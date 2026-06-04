@@ -34,7 +34,7 @@ async function displayVendorList() {
     const vendorSelect = displaySelectInput('Select a vendor',vendorList,'gs-select','vendor-list-2');
     const searchBtn = displayButton('Select','gs-btn', () => goToUrl(`/html/vendor/detail.html?id=${vendorSelect.select.value}`));
 
-    const vendorWindow = displayWindow('select vendor');
+    const vendorWindow = displayWindow('select vendor', false,false);
     vendorWindow.winBody.append(vendorSelect, searchBtn);
 
     vendorWindow.refresh = async () => {

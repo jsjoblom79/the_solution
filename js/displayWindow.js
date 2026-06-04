@@ -1,6 +1,6 @@
 "use strict";
 
-export default function displayWindow(title, hasDropDown=false){
+export default function displayWindow(title, hasDropDown=true, isCollapsed=true){
     //Creates a div window
     const divWin = document.createElement('div');
     divWin.classList.add('gs-window', 'gs-mb-1');
@@ -19,7 +19,8 @@ export default function displayWindow(title, hasDropDown=false){
         const divWinCtrls = document.createElement('div');
         const ctrlBtn = document.createElement('button');
         ctrlBtn.classList.add('gs-window__btn', 'gs-window__btn--collapse');
-        ctrlBtn.ariaLabel = 'Collapse';
+        ctrlBtn.textContent = isCollapsed ? '▲' : '▽';
+        ctrlBtn.setAttribute('aria-label', isCollapsed ? 'Expand' : 'Collapse');
         ctrlBtn.addEventListener('click', () =>{
             const b = document.querySelector('#' + divWin.id +' .gs-window__body');
             const collapsed = b.classList.toggle('gs-window__body--collapsed');
@@ -33,11 +34,10 @@ export default function displayWindow(title, hasDropDown=false){
 
     //Create the Body of the window.
     const winBody = document.createElement('div');
-    if(hasDropDown){
-        winBody.classList.add('gs-window__body','gs-window__body--collapsed');
-    }
     winBody.classList.add('gs-window__body');
-
+    if(isCollapsed){
+        winBody.classList.add('gs-window__body--collapsed');
+    }
 
     // Put it all together
     titlebar.append(spanTitle);

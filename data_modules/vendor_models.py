@@ -76,8 +76,11 @@ class Contacts(Base):
             'email': self.email,
             'title': self.title,
             'is_active': self.is_active,
-            'modify_date': str(self.modify_date)
+            'modify_date': str(self.modify_date),
+            'fullname': f"{self.first_name} {self.last_name}",
         }
+    def fullname(self):
+        return f"{self.first_name} {self.last_name}"
 
 class Invoices(Base):
     __tablename__ = 'invoices'
