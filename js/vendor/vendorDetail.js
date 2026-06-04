@@ -110,7 +110,6 @@ async function displayVendorContacts(id){
         let contactList =[];
         for(const contact of vendorContacts){
             contactList.push({name: contact.first_name + ' ' + contact.last_name, id: contact.id});
-            console.log(contact);
         }
         const selectContact = displaySelectInput('Contacts', contactList, 'gs-select', 'contact-select', async (event) => {
                 contact = await window.pywebview.api.vendor.get_contact_ById(event.target.value);
@@ -132,8 +131,6 @@ async function displayVendorContacts(id){
                 } else {
                   contact[key] = field.input.value;
                 }
-
-
             });
             const resultContact = await window.pywebview.api.vendor.update_contact(contact);
 
@@ -176,12 +173,21 @@ async function displayVendorProducts(id){
     const products = await window.pywebview.api.vendor.get_all_products(id);
     const fields = ['item_number','name','description', 'update_date'];
     const tableWin = await displayWindow("Product List", true, false);
+
     if(Array.isArray(products) && products.length > 0){
         const header = ['Item Number', 'Name', 'Description', 'Last Bill Date', 'Price'];
         const productTable = await displayTables('product-table', header, products, fields);
         tableWin.winBody.append(productTable);
+        productTable.addEventListener('rowselect', (e) => {
+            displayProductInfo(e.detail);
+        });
     }
 
-    winDiv.winBody.append(tableWin);
+    const productInfoWin = await displayWindow('Product Details', true, true);
+    const displayProductInfo = (product) => {
+        console.log("You selected " + product.name);
+    };
+
+    winDiv.winBody.append(tableWin, productInfoWin);
     return winDiv;
 }

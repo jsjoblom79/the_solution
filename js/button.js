@@ -4,7 +4,6 @@ export default function displayButton(name, classArray, event){
 
     const button = document.createElement('button');
     button.textContent = name;
-    console.log(event);
     button.addEventListener('click', event);
 
     if(Array.isArray(classArray)){

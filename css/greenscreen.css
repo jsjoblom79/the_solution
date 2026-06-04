@@ -586,11 +586,14 @@ small, .gs-muted {
 }
 
 .gs-table tr:hover td {
-  background: var(--gs-bg-raised);
+  background: var(--gs-secondary);
   text-shadow: 0 0 5px rgba(51, 255, 51, 0.50);
+  color: var(--gs-bg);
 }
-.gs-table tr.selected-row {
-  background: rgb(251, 255, 251, 0.2);
+
+.gs-table tr.selected-row td {
+  background: var(--gs-secondary);
+  color: var(--gs-bg);
 }
 .gs-table--selected td {
   background: rgba(34, 204, 34, 0.1);
