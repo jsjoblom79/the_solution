@@ -173,20 +173,58 @@ async function displayVendorProducts(id){
     const products = await window.pywebview.api.vendor.get_all_products(id);
     const fields = ['item_number','name','description', 'update_date'];
     const tableWin = await displayWindow("Product List", true, false);
+    let product;
 
     if(Array.isArray(products) && products.length > 0){
         const header = ['Item Number', 'Name', 'Description', 'Last Bill Date', 'Price'];
         const productTable = await displayTables('product-table', header, products, fields);
         tableWin.winBody.append(productTable);
         productTable.addEventListener('rowselect', (e) => {
-            displayProductInfo(e.detail);
+            product = e.detail;
+            updateProductInfo(product);
         });
     }
 
+    const productItemNumber = await displayField('Item Number', 'product-item_number','text','gs-input');
+    const productName = await displayField('Name', 'product-name', 'text', 'gs-input');
+    const productDescription = await displayField('Description','product-description', 'text', 'gs-input');
+    const productModel = await displayField('Model', 'product-model', 'text', 'gs-input');
+    const productSerial = await displayField('Serial', 'product-serial', 'text', 'gs-input');
+    const productServiceLevel = await displayField('Service Level', 'product-service_level', 'text', 'gs-input');
+    const productUpdateDate = await displayField('Update Date', 'product-update_date',  'date', 'gs-input');
+    const productIsUsed = await displayField('IN USE', 'product-is_used', 'checkbox', 'gs-input');
+
+    const rowOneFields = displayTwoField([productName, productItemNumber]);
+    const rowThreeFields = displayThreeFields([productModel, productSerial, productServiceLevel]);
+    const rowFourFields = displayTwoField([productUpdateDate, productIsUsed]);
     const productInfoWin = await displayWindow('Product Details', true, true);
-    const displayProductInfo = (product) => {
-        console.log("You selected " + product.name);
+
+    const updFields = [productItemNumber, productName, productDescription, productModel, productSerial, productServiceLevel, productUpdateDate, productIsUsed ];
+
+    const updateProductInfo = (product) => {
+        updFields.forEach(field => {
+            const key = field.input.id.replace('product-', '');
+            if(key.includes('date')){
+                field.input.value = returnDate(product[key]);
+            } else {
+                field.input.value = product[key];
+            }
+            
+        });
     };
+
+    const updateButton = displayButton('Update', ['gs-btn','gs-btn--primary'], async() => {
+        updFields.forEach(field => {
+           const key = field.input.id.replace('product-','');
+           product[key] = field.input.value;
+        });
+        const newContact = await window.pywebview.api.vendor.update_product(product);
+        updateProductInfo(newContact);
+
+    });
+    productInfoWin.winBody.append(rowOneFields, productDescription, rowThreeFields, rowFourFields, updateButton);
+
+
 
     winDiv.winBody.append(tableWin, productInfoWin);
     return winDiv;

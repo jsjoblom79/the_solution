@@ -93,6 +93,17 @@ class VendorDatabaseAPI:
             logging.error(f"Unable to update contact. {e}")
             raise
 
+    def update_product(self, product):
+        try:
+            updated_product = Products(**product)
+            updated_product.create_date = datetime.fromisoformat(updated_product.create_date.replace("Z", "+00:00"))
+            updated_product.update_date = datetime.fromisoformat(updated_product.update_date.replace("Z", "+00:00"))
+            contact = self.repo.update(updated_product)
+            return updated_product.to_dict()
+        except Exception as e:
+            logging.error(f"Unable to update product. {e}")
+            raise
+
     def get_vendor(self, vendor_id):
         vendor = self.repo.get_by_model_id(Vendors, vendor_id)
         return vendor.to_dict()
