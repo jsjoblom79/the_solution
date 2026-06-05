@@ -52,6 +52,12 @@ class VendorDatabaseAPI:
     def add_product(self, product):
         try:
             new_product = Products(**product)
+            new_product.create_date = datetime.now()
+            print(f"The new product update date is {new_product.update_date}")
+            if new_product.update_date != '':
+                new_product.update_date = datetime.fromisoformat(new_product.update_date.replace("Z", "+00:00"))
+            else:
+                new_product.update_date = None
             saved_product = self.repo.add(new_product)
             print(new_product.id)
             return new_product.to_dict()
@@ -62,9 +68,8 @@ class VendorDatabaseAPI:
     def add_product_price(self, product_price):
         try:
             new_price = ProductPrices(**product_price)
-
             saved_price = self.repo.add(new_price)
-            return saved_price.to_dict()
+            return new_price.to_dict()
         except Exception as e:
             logging.error(f"Unable to add product price. {e}")
             raise
@@ -138,6 +143,7 @@ class VendorDatabaseAPI:
 
     def get_all_products(self, vendorId):
         products =  self.repo.get_all_children(Products, vendorId)
+
         return [
             product.to_dict() for product in products
         ]
@@ -145,10 +151,7 @@ class VendorDatabaseAPI:
     def get_product_price(self, productId):
         prices = self.repo.get_all_product_children(ProductPrices, productId)
         for price in prices:
-            print(price.to_dict())
-            print(price.price)
             if price.is_active:
-
                 return price.to_dict()
 
     def get_contact_by_id(self, contact_id):

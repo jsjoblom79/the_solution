@@ -134,7 +134,7 @@ class Products(Base):
             'model': self.model,
             'serial': self.serial,
             'service_level': self.service_level,
-            'create_date': str(self.create_date.date()),
+            'create_date': str(self.create_date),
             'update_date': str(self.update_date),
             'is_used': self.is_used,
         }
@@ -190,6 +190,6 @@ class ProductPrices(Base):
             'product_id': self.product_id,
             'price': self.price,
             'is_active': self.is_active,
-            'create_date': str(self.create_date.date()),
+            'create_date': str(self.create_date),
             'update_date': str(self.update_date),
         }

@@ -26,15 +26,16 @@ export default async function displayTables(tableId, headerArray, dataArray, fil
         Array.from(tbody.rows).forEach(row => row.classList.remove('selected-row'));
     };
 
-    for(const data of dataArray){
+
+    const createRow = (data) => {
         const tr = document.createElement('tr');
 
         for(const [key, value] of Object.entries(data)){
             if(filterTableResultsArray.includes(key)){
                 const td = document.createElement('td');
                 if(key.toLowerCase().includes('date')){
-                    console.log(value);
-                    if(value !== None) {
+                    console.log(typeof value);
+                    if(value !== 'None') {
                         const [year, month, day] = value.substring(0, 10).split('-');
                         td.textContent = `${month}/${day}/${year}`;
                     }
@@ -47,18 +48,31 @@ export default async function displayTables(tableId, headerArray, dataArray, fil
             }
         }
         tr.addEventListener('click', ()=>{
-            getRows();
-            tr.classList.add('selected-row');
-            tableDiv.selectedRow = data;
-            tableDiv.dispatchEvent(new CustomEvent('rowselect', { detail: data }));
+            if(tr.classList.contains('selected-row')){
+                tr.classList.remove('selected-row');
+                tableDiv.selectedRow = null;
+                tableDiv.dispatchEvent(new CustomEvent('rowselect', { detail: null }));
+            } else {
+                getRows();
+                tr.classList.add('selected-row');
+                tableDiv.selectedRow = data;
+                tableDiv.dispatchEvent(new CustomEvent('rowselect', { detail: data }));
+            }
         });
-        tbody.append(tr);
+        return tr;
     }
-
+    tbody.append(...dataArray.map(createRow));
     tableDiv.style.maxHeight = "300px";
     tableDiv.style.overflowY = 'auto';
     table.selectedRow = null;
     table.append(thead, tbody);
     tableDiv.append(table);
+
+    tableDiv.addRow = (data) => {tbody.append(createRow(data)); };
+    tableDiv.refresh = (newDataArray) => {
+        tbody.replaceChildren(...newDataArray.map(createRow));
+        tableDiv.selectedRow = null;
+    };
+
     return tableDiv;
 }

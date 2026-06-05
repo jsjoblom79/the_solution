@@ -4,8 +4,8 @@ export default function displayWindow(title, hasDropDown=true, isCollapsed=true)
     //Creates a div window
     const divWin = document.createElement('div');
     divWin.classList.add('gs-window', 'gs-mb-1');
-    const titleId = title.replaceAll(' ','-').replaceAll(/[^\w\s-]/g,'');
-    divWin.id = titleId;//.replace(' ', '-') + "-id";
+    //const titleId =
+    divWin.id = title.replaceAll(' ','-').replaceAll(/[^\w\s-]/g,'');
     //Creates the title bar
     const titlebar = document.createElement('div');
     titlebar.classList.add('gs-window__titlebar');
@@ -43,6 +43,11 @@ export default function displayWindow(title, hasDropDown=true, isCollapsed=true)
     titlebar.append(spanTitle);
     divWin.append(titlebar, winBody)
     divWin.winBody = winBody;
+
+    divWin.setTitle = (title) => { spanTitle.textContent = title; };
+    divWin.addContent = (...elements) => { winBody.append(...elements); };
+    divWin.removeContent = (element) => { winBody.removeChild(element); };
+    divWin.clearContent = () => { winBody.replaceChildren(); };
 
     return divWin;
 }

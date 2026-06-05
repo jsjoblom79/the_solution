@@ -8,7 +8,6 @@ class VendorRepo:
         self.session = session
 
     def add(self, item):
-
         try:
             self.session.add(item)
             self.session.commit()

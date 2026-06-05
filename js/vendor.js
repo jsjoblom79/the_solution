@@ -9,6 +9,7 @@ import displayMainMenu from "/js/menu.js";
 import displayFooter from "/js/displayFooter.js";
 import displayAppTitleBar from "/js/appTitleBar.js";
 
+
 const vendorBody = document.getElementById('main-content');
 const alert = document.createElement('div');
 alert.id = 'alert-message';

@@ -1,25 +1,14 @@
-import displayMainMenu from "/js/menu.js";
-import displayAppTitleBar from "/js/appTitleBar.js";
-import displayFooter from "/js/displayFooter.js";
-import displayWindow from "/js/displayWindow.js";
+import displayTitleAndMenu from "/js/TitlebarAndMenu.js";
 
-
-let mainContent = document.getElementById('main-content');
-let footerContent = document.getElementById('footer');
-// Add the main event to look for the pywebview.
 window.addEventListener('pywebviewready', async () =>{
-    const mainMenu = await displayMainMenu();
-
-    mainContent.append(
-        await displayAppTitleBar('JMS Systems', 'copyright (c) 2026 jms'),
-        mainMenu
-
-    );
-    displayBodyContent();
-    mainContent.append(await displayFooter("Main",'System'));
+    const main = await displayTitleAndMenu();
+    document.body.prepend(main);
+    main.mainMenu.addEventListener('itemselect', (e) => {
+        navigate(e.detail.location);
+    });
 });
 
-function displayBodyContent() {
-    const vendorWindow = displayWindow('Vendor Dashboard',true, false);
-    mainContent.append(vendorWindow);
+async function navigate(location){
+    console.log("you want to go here.   " + location);
 }
+
