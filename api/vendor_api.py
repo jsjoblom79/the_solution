@@ -74,7 +74,7 @@ class VendorDatabaseAPI:
                         setattr(new_comment, column.key, self.parse_datetime(value))
 
             saved_comment = self.repo.add(new_comment)
-            return saved_comment.to_dict()
+            return new_comment.to_dict()
         except Exception as e:
             logging.error(f"Unable to add comment. {e}")
             raise
@@ -167,7 +167,7 @@ class VendorDatabaseAPI:
         ]
     # Retrieve Vendor Comments
     def get_vendor_comments(self, vendor_id):
-        ''' Get's all comments for a specific vendor. '''
+        ''' Gets all comments for a specific vendor. '''
         comments = self.repo.get_all_children(Comments, vendor_id)
         return [
             comment.to_dict() for comment in comments

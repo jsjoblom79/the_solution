@@ -11,6 +11,7 @@ import displayFooter from "/js/displayFooter.js";
 import displayAppTitleBar from "/js/appTitleBar.js";
 import displaySelectInput from "/js/selectInput.js";
 import displayTables from "/js/tableDisplay.js";
+import displayTextAreaField from "/js/textareaField.js";
 
 let mainContent = document.getElementById('main-content');
 let alert = document.createElement('div');
@@ -92,7 +93,19 @@ function returnDate(dateString){
 
 async function displayVendorContacts(id){
     const dispWin = displayWindow("Contacts", true);
+    const contactTableWin = displayWindow('Contacts', true, false);
     const vendorContacts = await window.pywebview.api.vendor.get_all_contacts(id);
+    const contactTable = await displayTables(
+        'vendor-contacts',
+        ['Name', 'Phone', 'Email','Active'],
+        vendorContacts,
+        ['fullname','phone', 'email', 'is_active'],
+        ['fullname','phone', 'email', 'is_active']
+        );
+    contactTableWin.winBody.append(contactTable);
+    const contactDetailWin = displayWindow('Add Contact');
+
+    let contact;
 
     const contactFName = await displayField('First Name','contact-first_name', 'text', 'gs-input');
     const contactLName =  await displayField('Last Name', 'contact-last_name', 'text', 'gs-input');
@@ -100,71 +113,66 @@ async function displayVendorContacts(id){
     const contactEmail =  await displayField('Email', 'contact-email', 'text', 'gs-input');
     const contactTitle =  await displayField('Title', 'contact-title', 'text', 'gs-input');
     const contactActive =  await displayField('Active', 'contact-is_active', 'checkbox', 'gs-input');
-    const contactLastUpdated =  await displayField('Last Update', 'contact-md', 'date', 'gs-input');
+    const contactLastUpdated =  await displayField('Last Update', 'contact-modify_date', 'date', 'gs-input');
     const contactLine1 = await displayTwoField([contactFName, contactLName]);
     const contactLine2 = await displayThreeFields([contactPhone, contactEmail, contactActive]);
     const contactLine3 = await displayTwoField([contactTitle, contactLastUpdated]);
-    let contact;
-    const listToSave = [contactFName, contactLName, contactPhone, contactEmail, contactTitle, contactActive];
-    if(Array.isArray(vendorContacts) && vendorContacts.length > 0){
-        let contactList =[];
-        for(const contact of vendorContacts){
-            contactList.push({name: contact.first_name + ' ' + contact.last_name, id: contact.id});
-        }
-        const selectContact = displaySelectInput('Contacts', contactList, 'gs-select', 'contact-select', async (event) => {
-                contact = await window.pywebview.api.vendor.get_contact_ById(event.target.value);
-                console.log(event.target.options[event.target.selectedIndex].text);
-                contactFName.input.value = contact.first_name;
-                contactLName.input.value = contact.last_name;
-                contactPhone.input.value = contact.phone;
-                contactEmail.input.value = contact.email;
-                contactTitle.input.value = contact.title;
-                contactActive.input.checked = !!contact.is_active;
-                contactLastUpdated.input.value = returnDate(contact.modify_date);
+
+    const fieldList = [contactFName, contactLName, contactPhone, contactEmail, contactTitle, contactLastUpdated];
+    const contactAddButton = await displayButton('Add',['gs-btn', 'gs-btn--primary'], async() => {
+        const newContact = {};
+        fieldList.forEach(field => {
+           const key = field.input.id.replace('contact-','');
+           newContact[key] = field.input.value;
         });
-
-        const updateButton = displayButton('Update', ['gs-btn', 'gs-btn--primary'], async() =>{
-            listToSave.forEach(field =>{
-                const key = field.input.id.replace('contact-','');
-                if(key === 'is_active'){
-                    contact[key] = field.input.checked ? 1 : 0;
-                } else {
-                  contact[key] = field.input.value;
-                }
-            });
-            const resultContact = await window.pywebview.api.vendor.update_contact(contact);
-
-            if(resultContact){
-                const contactAlert = await displayAlert(resultContact.fullname + " has been updated", 'success', alert.id);
-                alert.append(contactAlert);
-            }
+        newContact['vendor_id'] = id;
+        const contactResult = await window.pywebview.api.vendor.add_contact(newContact);
+        contactTable.addRow(newContact);
+    });
+    const contactUpdateButton = await displayButton('Update', ['gs-btn', 'gs-btn--primary'], async() => {
+        fieldList.forEach(field => {
+            const key = field.input.id.replace('contact-', '');
+            contact[key] = field.input.value;
         });
-        dispWin.winBody.append(selectContact);
-        dispWin.winBody.append(contactLine1, contactLine2, contactLine3, updateButton);
-
-    } else {
-
-        const addButton = displayButton('Add', ['gs-btn', 'gs-btn--primary'], async() =>{
-            const newContact = {};
-            listToSave.forEach(field =>{
-               const key = field.input.id.replace('contact-','');
-               if(key === "is_active"){
-                   newContact[key] = field.input.checked ? 1 : 0;
-               } else {
-                 newContact[key] = field.input.value;
-               }
-            });
-            newContact['vendor_id'] = id;
-            const resultContact = await window.pywebview.api.vendor.add_contact(newContact);
-
-            if(resultContact){
-                const contactAlert = await displayAlert(resultContact.fullname + " has been added.",'success', alert.id);
-                alert.append(contactAlert);
-            }
+        const contactResult = await window.pywebview.api.vendor.update_contact(contact);
+        const newData = await window.pywebview.api.vendor.get_all_contacts(id);
+        contactTable.refresh(newData);
+    });
+    const clearContact = () => {
+        contact = null;
+        fieldList.forEach(field => {
+            field.input.value = null;
         });
-        dispWin.winBody.append(contactLine1, contactLine2, contactLine3, addButton);
+    }
+    const loadContactDetail = (contact, from=null) => {
+        fieldList.forEach(field =>{
+           const key = field.input.id.replace('contact-','');
+           field.input.value = contact[key];
+           if(key === 'is_active'){field.input.checked = !!contact[key];}
+        });
     }
 
+    contactTable.addEventListener('rowselect', (e) => {
+        if(e.detail === null){
+            contactDetailWin.removeContent(contactUpdateButton);
+            contactDetailWin.addContent(contactAddButton);
+            clearContact();
+            contactDetailWin.setTitle('Add Contact');
+        } else {
+            // Ensures contact is removed if already selected.
+            clearContact();
+            contact = e.detail;
+            loadContactDetail(contact);
+            if(contactDetailWin.winBody.contains(contactAddButton)){
+                contactDetailWin.removeContent(contactAddButton);
+                contactDetailWin.addContent(contactUpdateButton);
+            }
+            contactDetailWin.setTitle(`Update Contact ${contact.fullname}`);
+        }
+    });
+
+    contactDetailWin.winBody.append(contactLine1, contactLine2, contactLine3, contactAddButton);
+    dispWin.winBody.append(contactTableWin, contactDetailWin);
     return dispWin;
 }
 
@@ -311,12 +319,29 @@ async function displayVendorProducts(id){
 
 async function displayNoteWindow(id) {
     const noteWin = await displayWindow('Vendor Comments', true, true);
+    const noteTableWin = await displayWindow('Previous Notes', true, false);
+    const addNoteWin = await displayWindow('Add Notes', true, true);
     const notes = await window.pywebview.api.vendor.get_vendor_comments(id);
     const header = ['Date', 'Comment'];
+    const displayAndOrder = ['create_date', 'comment'];
+    const tableComments = await displayTables('vendor-comments',header, notes, displayAndOrder, displayAndOrder);
 
-    const tableComments = await displayTables('vendor-comments',header, notes);
-
-    noteWin.winBody.append(tableComments);
+    const addNoteField = await displayTextAreaField('Comment', 3, 'vendor-note');
+    const addNoteButton = await displayButton('Add', ['gs-btn', 'gs-btn--primary'],async() => {
+        const comment = {
+            vendor_id: id,
+            comment: addNoteField.input.value
+        }
+        const result = await window.pywebview.api.vendor.add_comment(comment);
+        if (result.id !== null){
+            addNoteField.input.value = null;
+            const newNotes = await window.pywebview.api.vendor.get_vendor_comments(id);
+            tableComments.refresh(newNotes);
+        }
+    });
+    addNoteWin.winBody.append(addNoteField, addNoteButton);
+    noteTableWin.winBody.append(tableComments);
+    noteWin.winBody.append(noteTableWin, addNoteWin);
 
     return noteWin;
 }
