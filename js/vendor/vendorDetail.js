@@ -38,7 +38,7 @@ async function displayVendor(id){
         const contactWindow = await displayVendorContacts(id);
         const productWindow = await displayVendorProducts(id);
         const invoiceWindow = displayWindow("Invoices", true);
-        const noteWindow = displayWindow("Notes", true);
+        const noteWindow = await displayNoteWindow(id);
 
         div.append(vendorWindow, contactWindow, productWindow, invoiceWindow, noteWindow);
     }
@@ -228,7 +228,10 @@ async function displayVendorProducts(id){
             }
         });
         const prodPrice = await window.pywebview.api.vendor.get_product_price(product.id);
-        productPrice.input.value = `$ ${prodPrice.price}`;
+        if(prodPrice){
+          productPrice.input.value = `$ ${prodPrice.price}`;
+        }
+
     };
 
     const getNewProduct = () => {
@@ -242,6 +245,7 @@ async function displayVendorProducts(id){
             }
 
         });
+        newProduct['id'] = product.id;
         newProduct['vendor_id'] = id;
         return newProduct;
     };
@@ -249,7 +253,7 @@ async function displayVendorProducts(id){
     const getNewPrice = (product_id) => {
         return {
             product_id: product_id.id,
-            price: productPrice.input.value,
+            price: productPrice.input.value.replace("$ ", ''),
             is_active: 1
         };
     }
@@ -258,6 +262,7 @@ async function displayVendorProducts(id){
         updFields.forEach(field => {
             field.input.value = null;
         });
+        productPrice.input.value = null;
     }
 
 
@@ -274,6 +279,8 @@ async function displayVendorProducts(id){
     const productUpdateButton = displayButton('Update', ['gs-btn', 'gs-btn--primary'], async() => {
         const newProduct = await window.pywebview.api.vendor.update_product(getNewProduct());
         const newDataArray = await window.pywebview.api.vendor.get_all_products(id);
+        const newPrice = getNewPrice(newProduct);
+        const addedPrice = await window.pywebview.api.vendor.add_product_price(newPrice);
         productTable.refresh(newDataArray);
     });
 
@@ -287,6 +294,7 @@ async function displayVendorProducts(id){
             clearProduct();
             productAddWin.setTitle("add Product");
         } else {
+            clearProduct();
             product = e.detail;
             updateProductInfo(product);
             if(productAddWin.winBody.contains(productAddButton)){
@@ -299,4 +307,16 @@ async function displayVendorProducts(id){
 
     winDiv.winBody.append(tableWin, productAddWin);
     return winDiv;
+}
+
+async function displayNoteWindow(id) {
+    const noteWin = await displayWindow('Vendor Comments', true, true);
+    const notes = await window.pywebview.api.vendor.get_vendor_comments(id);
+    const header = ['Date', 'Comment'];
+
+    const tableComments = await displayTables('vendor-comments',header, notes);
+
+    noteWin.winBody.append(tableComments);
+
+    return noteWin;
 }

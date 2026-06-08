@@ -42,7 +42,7 @@ if "__main__" == __name__:
     window = webview.create_window(
         title="The Solution",
         url="main_page.html",
-        on_top=True,
+        on_top=False,
         frameless=False,
         easy_drag=True,
         js_api=api,

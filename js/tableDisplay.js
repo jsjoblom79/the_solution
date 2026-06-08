@@ -1,6 +1,6 @@
 "use strict";
 
-export default async function displayTables(tableId, headerArray, dataArray, filterTableResultsArray){
+export default async function displayTables(tableId, headerArray, dataArray, filterTableResultsArray=[]){
     const tableDiv = document.createElement('div');
     const table = document.createElement('table');
     table.id=tableId;
@@ -33,16 +33,16 @@ export default async function displayTables(tableId, headerArray, dataArray, fil
         for(const [key, value] of Object.entries(data)){
             if(filterTableResultsArray.includes(key)){
                 const td = document.createElement('td');
-                if(key.toLowerCase().includes('date')){
-                    console.log(typeof value);
-                    if(value !== 'None') {
-                        const [year, month, day] = value.substring(0, 10).split('-');
-                        td.textContent = `${month}/${day}/${year}`;
-                    }
-                } else {
-                    td.textContent = value;
-                }
-
+                // if(key.toLowerCase().includes('date')){
+                //     console.log(typeof value);
+                //     if(value !== 'None') {
+                //         const [year, month, day] = value.substring(0, 10).split('-');
+                //         td.textContent = `${month}/${day}/${year}`;
+                //     }
+                // } else {
+                //     td.textContent = value;
+                // }
+                td.textContent = value;
                 tr.append(td);
 
             }

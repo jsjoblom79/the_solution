@@ -1,6 +1,7 @@
 import logging
 
 from sqlalchemy import select
+from sqlalchemy.orm.attributes import flag_modified
 
 
 class VendorRepo:
