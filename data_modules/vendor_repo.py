@@ -13,7 +13,6 @@ class VendorRepo:
             self.session.add(item)
             self.session.commit()
             self.session.refresh(item)
-            print(item.id)
             return item
         except Exception as e:
             self.session.rollback()

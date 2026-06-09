@@ -74,7 +74,7 @@ class VendorDatabaseAPI:
                         setattr(new_comment, column.key, self.parse_datetime(value))
 
             saved_comment = self.repo.add(new_comment)
-            return saved_comment.to_dict()
+            return new_comment.to_dict()
         except Exception as e:
             logging.error(f"Unable to add comment. {e}")
             raise
@@ -167,7 +167,7 @@ class VendorDatabaseAPI:
         ]
     # Retrieve Vendor Comments
     def get_vendor_comments(self, vendor_id):
-        ''' Get's all comments for a specific vendor. '''
+        ''' Gets all comments for a specific vendor. '''
         comments = self.repo.get_all_children(Comments, vendor_id)
         return [
             comment.to_dict() for comment in comments
@@ -195,6 +195,41 @@ class VendorDatabaseAPI:
     # Retrieves Invoice information
     def get_all_invoices(self):
         return self.repo.get_all(Invoices)
+
+    def get_vendor_invoices(self, vendor_id):
+        ''' Gets all invoices for a specific vendor. '''
+        invoices = self.repo.get_all_children(Invoices, vendor_id)
+        return [invoice.to_dict() for invoice in invoices]
+
+    def add_invoice(self, invoice):
+        ''' Add a new invoice to the database. '''
+        try:
+            new_invoice = Invoices(**invoice)
+            for column in inspect(Invoices).mapper.column_attrs:
+                if 'date' in column.key:
+                    value = getattr(new_invoice, column.key)
+                    if value:
+                        setattr(new_invoice, column.key, self.parse_datetime(value))
+            self.repo.add(new_invoice)
+            return new_invoice.to_dict()
+        except Exception as e:
+            logging.error(f"Unable to add invoice. {e}")
+            raise
+
+    def update_invoice(self, invoice):
+        ''' Update invoice information. '''
+        try:
+            updated_invoice = Invoices(**invoice)
+            for column in inspect(Invoices).mapper.column_attrs:
+                if 'date' in column.key:
+                    value = getattr(updated_invoice, column.key)
+                    if value:
+                        setattr(updated_invoice, column.key, self.parse_datetime(value))
+            self.repo.update(updated_invoice)
+            return updated_invoice.to_dict()
+        except Exception as e:
+            logging.error(f"Unable to update invoice. {e}")
+            raise
 
     # Retrieves Product Information
     def get_all_products(self, vendorId):

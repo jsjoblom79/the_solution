@@ -60,7 +60,6 @@ class Contacts(Base):
     modify_date: Mapped[Optional[datetime]] = mapped_column(DateTime, onupdate=datetime.now)
 
     vendor: Mapped['Vendors'] = relationship('Vendors', back_populates='contacts')
-    comments: Mapped[list['Comments']] = relationship('Comments', back_populates='contact')
 
     def to_dict(self) -> dict:
         return {
@@ -76,6 +75,7 @@ class Contacts(Base):
             'modify_date': self.modify_date.isoformat() if self.modify_date else None,
             'fullname': f"{self.first_name} {self.last_name}",
         }
+
     def fullname(self) -> dict:
         return {'fullname': f"{self.first_name} {self.last_name}"}
 
@@ -138,19 +138,16 @@ class Comments(Base):
     __tablename__ = 'comments'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    contact_id: Mapped[int] = mapped_column(ForeignKey('contacts.id'), nullable=False)
     vendor_id: Mapped[int] = mapped_column(ForeignKey('vendors.id'), nullable=False)
     comment: Mapped[Optional[str]] = mapped_column(Text)
     create_date: Mapped[Optional[datetime]] = mapped_column(DateTime, default=func.now())
 
-    contact: Mapped['Contacts'] = relationship('Contacts', back_populates='comments')
     vendor: Mapped['Vendors'] = relationship('Vendors', back_populates='comments')
 
     def to_dict(self) -> dict:
         return {
             'id': self.id,
             'vendor_id': self.vendor_id,
-            'contact_id': self.contact_id,
             'comment': self.comment,
             'create_date': self.create_date.isoformat() if self.create_date else None,
         }

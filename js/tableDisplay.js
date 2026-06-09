@@ -1,6 +1,8 @@
 "use strict";
 
-export default async function displayTables(tableId, headerArray, dataArray, filterTableResultsArray=[]){
+import displayField from "/js/inputField.js";
+
+export default async function displayTables(tableId, headerArray, dataArray, filterTableResultsArray=[], displayOrderArray=[]){
     const tableDiv = document.createElement('div');
     const table = document.createElement('table');
     table.id=tableId;
@@ -27,25 +29,34 @@ export default async function displayTables(tableId, headerArray, dataArray, fil
     };
 
 
+    // Determine the ordered list of keys to render.
+    // If displayOrderArray is provided, use it as the canonical order (filtered
+    // to only keys that also appear in filterTableResultsArray when that list is
+    // non-empty). Otherwise fall back to filterTableResultsArray order, then
+    // finally natural object-key order.
+    const resolveKeyOrder = (data) => {
+        const filter = filterTableResultsArray.length ? filterTableResultsArray : null;
+        if (displayOrderArray.length) {
+            return displayOrderArray.filter(k => (!filter || filter.includes(k)) && Object.prototype.hasOwnProperty.call(data, k));
+        }
+        return filter ? filter.filter(k => Object.prototype.hasOwnProperty.call(data, k)) : Object.keys(data);
+    };
+
     const createRow = (data) => {
         const tr = document.createElement('tr');
 
-        for(const [key, value] of Object.entries(data)){
-            if(filterTableResultsArray.includes(key)){
-                const td = document.createElement('td');
-                // if(key.toLowerCase().includes('date')){
-                //     console.log(typeof value);
-                //     if(value !== 'None') {
-                //         const [year, month, day] = value.substring(0, 10).split('-');
-                //         td.textContent = `${month}/${day}/${year}`;
-                //     }
-                // } else {
-                //     td.textContent = value;
-                // }
-                td.textContent = value;
-                tr.append(td);
-
+        for (const key of resolveKeyOrder(data)) {
+            const td = document.createElement('td');
+            td.textContent = data[key];
+            if(key.includes('date') && data[key] != null){
+                const [year, month, day] = data[key].substring(0, 10).split('-');
+                td.textContent = `${month}/${day}/${year}`;//data[key].substring(0, 10);
             }
+            console.log(typeof data[key]);
+            if(typeof data[key] === 'boolean'){
+                if(data[key]){ td.textContent = 'X';} else { td.textContent = '';}
+            }
+            tr.append(td);
         }
         tr.addEventListener('click', ()=>{
             if(tr.classList.contains('selected-row')){
