@@ -104,6 +104,7 @@ async function displayVendorContacts(id){
         );
     contactTableWin.winBody.append(contactTable);
     const contactDetailWin = displayWindow('Add Contact');
+<<<<<<< HEAD
 
     let contact;
 
@@ -182,6 +183,68 @@ async function displayVendorContacts(id){
             contact = e.detail;
             loadContactDetail(contact);
             if (contactDetailWin.winBody.contains(contactAddButton)) {
+=======
+
+    let contact;
+
+    const contactFName = await displayField('First Name','contact-first_name', 'text', 'gs-input');
+    const contactLName =  await displayField('Last Name', 'contact-last_name', 'text', 'gs-input');
+    const contactPhone =  await displayField('Phone', 'contact-phone', 'text', 'gs-input');
+    const contactEmail =  await displayField('Email', 'contact-email', 'text', 'gs-input');
+    const contactTitle =  await displayField('Title', 'contact-title', 'text', 'gs-input');
+    const contactActive =  await displayField('Active', 'contact-is_active', 'checkbox', 'gs-input');
+    const contactLastUpdated =  await displayField('Last Update', 'contact-modify_date', 'date', 'gs-input');
+    const contactLine1 = await displayTwoField([contactFName, contactLName]);
+    const contactLine2 = await displayThreeFields([contactPhone, contactEmail, contactActive]);
+    const contactLine3 = await displayTwoField([contactTitle, contactLastUpdated]);
+
+    const fieldList = [contactFName, contactLName, contactPhone, contactEmail, contactTitle, contactLastUpdated];
+    const contactAddButton = await displayButton('Add',['gs-btn', 'gs-btn--primary'], async() => {
+        const newContact = {};
+        fieldList.forEach(field => {
+           const key = field.input.id.replace('contact-','');
+           newContact[key] = field.input.value;
+        });
+        newContact['vendor_id'] = id;
+        const contactResult = await window.pywebview.api.vendor.add_contact(newContact);
+        contactTable.addRow(newContact);
+    });
+    const contactUpdateButton = await displayButton('Update', ['gs-btn', 'gs-btn--primary'], async() => {
+        fieldList.forEach(field => {
+            const key = field.input.id.replace('contact-', '');
+            contact[key] = field.input.value;
+        });
+        const contactResult = await window.pywebview.api.vendor.update_contact(contact);
+        const newData = await window.pywebview.api.vendor.get_all_contacts(id);
+        contactTable.refresh(newData);
+    });
+    const clearContact = () => {
+        contact = null;
+        fieldList.forEach(field => {
+            field.input.value = null;
+        });
+    }
+    const loadContactDetail = (contact, from=null) => {
+        fieldList.forEach(field =>{
+           const key = field.input.id.replace('contact-','');
+           field.input.value = contact[key];
+           if(key === 'is_active'){field.input.checked = !!contact[key];}
+        });
+    }
+
+    contactTable.addEventListener('rowselect', (e) => {
+        if(e.detail === null){
+            contactDetailWin.removeContent(contactUpdateButton);
+            contactDetailWin.addContent(contactAddButton);
+            clearContact();
+            contactDetailWin.setTitle('Add Contact');
+        } else {
+            // Ensures contact is removed if already selected.
+            clearContact();
+            contact = e.detail;
+            loadContactDetail(contact);
+            if(contactDetailWin.winBody.contains(contactAddButton)){
+>>>>>>> 1c583615ed65b2f907e60c65f860b34438261db8
                 contactDetailWin.removeContent(contactAddButton);
                 contactDetailWin.addContent(contactUpdateButton);
             }
